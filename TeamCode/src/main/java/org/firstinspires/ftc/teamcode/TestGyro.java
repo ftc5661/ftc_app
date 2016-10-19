@@ -37,7 +37,7 @@ public class TestGyro extends LinearOpMode{
         mrGyro.calibrate();
         // DO NOT MOVE SENSOR WHILE BLUE LIGHT IS SOLID
 
-        while (mrGyro.isCalibrating()){
+        while (!isStopRequested() && mrGyro.isCalibrating()){
             //Ensure calibration is complete (usually 2 seconds)
             sleep(50);
             idle();
@@ -62,7 +62,7 @@ public class TestGyro extends LinearOpMode{
         int zAccumulated = mrGyro.getIntegratedZValue(); //set variables to gyro readings
         double turnSpeed = 0.15;
 
-        while(Math.abs(zAccumulated - target) > 2){
+        while(!isStopRequested() && Math.abs(zAccumulated - target) > 2){
 
             if (zAccumulated > target){ //if gyro is positive,  the robot will turn right
                 motorLeft.setPower(turnSpeed);

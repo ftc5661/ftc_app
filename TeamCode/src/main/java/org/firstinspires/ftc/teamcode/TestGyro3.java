@@ -17,6 +17,8 @@ public class TestGyro3 extends LinearOpMode {
     DcMotor motorLeft;
     ModernRoboticsI2cGyro mrGyro;
     GyroSensor sensorGyro;
+    int numRev = 0;
+    int prevHeading;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -36,11 +38,12 @@ public class TestGyro3 extends LinearOpMode {
         mrGyro.calibrate();
         // DO NOT MOVE SENSOR WHILE BLUE LIGHT IS SOLID
 
-        while (mrGyro.isCalibrating()){
+        while (!isStopRequested() && mrGyro.isCalibrating()){
             //Ensure calibration is complete (usually 2 seconds)
             sleep(50);
             idle();
         }
+        prevHeading = mrGyro.getHeading();
 
         telemetry.addData(">", "Gyro Calibrated.  Press Start.");
         telemetry.update();
@@ -48,20 +51,38 @@ public class TestGyro3 extends LinearOpMode {
         //wait for the game to start(press the play button)
         waitForStart();
 
-        turnAbsoluteGyro(90);
+        //turnAbsoluteGyro(180);
+        while(true){
+            getGyroHeading();
+            checkGyro();
+            telemetry.addData("getGyroHeading()", getGyroHeading());
+            telemetry.update();
+        }
 
 
     }
 
     public void turnAbsoluteGyro(double deg) throws InterruptedException{
         //Turns robot by using MRGyro mounted on robot
-        int zAccumulated = mrGyro.getIntegratedZValue(); //set variables to gyro readings
-        double target_angle_degrees = deg;
-        double error_degrees = target_angle_degrees - zAccumulated;
-        double motor_output = (error_degrees / 180.0) + (error_degrees > 0 ? -.1 : .1);
 
-        while(Math.abs(zAccumulated - deg) > 2){
+        telemetry.addData(">", "Turning robot ", deg, "degees");
+        telemetry.update();
 
+        checkGyro();
+
+        double target = mrGyro.getHeading() + deg;
+        double TOLERANCE = 2;
+        //double error_degrees = target_angle_degrees - zAccumulated;
+        //double motor_output = (error_degrees / 180.0) + (error_degrees > 0 ? -.1 : .1);
+
+        while(!isStopRequested() && Math.abs(target - mrGyro.getHeading()) > TOLERANCE){
+            telemetry.addData(">", "Robot is turning");
+            telemetry.update();
+
+            double power = ((target - mrGyro.getHeading())/180) + ((target - mrGyro.getHeading() > 0 ? -.1 : .1));
+            motorLeft.setPower(power);
+            motorRight.setPower(-power);
+            /*
             if (Math.abs(error_degrees) > 30) {
                 motorLeft.setPower(.5 * Math.signum(error_degrees));
                 motorRight.setPower(-.5 * Math.signum(error_degrees));
@@ -69,6 +90,33 @@ public class TestGyro3 extends LinearOpMode {
                 motorLeft.setPower(motor_output);
                 motorRight.setPower(-motor_output);
             }
+            */
+            idle();
+        }
+        motorLeft.setPower(0);
+        motorRight.setPower(0);
+        idle();
+        checkGyro();
+    }
+
+    public void checkGyro(){
+        telemetry.addData(">", "Checking if gyro has turned over");
+        telemetry.update();
+
+        int currHeading = mrGyro.getHeading();
+        if(Math.abs(currHeading - prevHeading) >= 180){
+            //detected wrap around
+            if (currHeading > prevHeading){
+                numRev--;
+            } else {
+                numRev++;
+            }
+            prevHeading = currHeading;
         }
     }
+
+    public int getGyroHeading(){
+        return numRev*360 + mrGyro.getHeading();
+    }
+
 }
