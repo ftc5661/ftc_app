@@ -51,37 +51,37 @@ public class TestGyro3 extends LinearOpMode {
         //wait for the game to start(press the play button)
         waitForStart();
 
-        //turnAbsoluteGyro(180);
-        while(true){
-            getGyroHeading();
-            checkGyro();
-            telemetry.addData("getGyroHeading()", getGyroHeading());
-            telemetry.update();
-        }
+        turnGyroRight(90);
 
+        telemetry.addData(">", "Done Turning");
+        telemetry.update();
+        sleep(1000);
 
     }
 
-    public void turnAbsoluteGyro(double deg) throws InterruptedException{
+    public void turnGyroRight(double deg) throws InterruptedException{
         //Turns robot by using MRGyro mounted on robot
 
         telemetry.addData(">", "Turning robot ", deg, "degees");
         telemetry.update();
 
-        checkGyro();
-
         double target = mrGyro.getHeading() + deg;
         double TOLERANCE = 2;
+        double slowMove = 0.0;
         //double error_degrees = target_angle_degrees - zAccumulated;
         //double motor_output = (error_degrees / 180.0) + (error_degrees > 0 ? -.1 : .1);
 
         while(!isStopRequested() && Math.abs(target - mrGyro.getHeading()) > TOLERANCE){
-            telemetry.addData(">", "Robot is turning");
+            telemetry.addData(">", "Robot is currently turning");
             telemetry.update();
 
-            double power = ((target - mrGyro.getHeading())/180) + ((target - mrGyro.getHeading() > 0 ? -.1 : .1));
-            motorLeft.setPower(power);
-            motorRight.setPower(-power);
+            double gyroPower = ((target - mrGyro.getHeading())/180) + slowMove;//((target - mrGyro.getHeading() > 0 ? -.1 : .1));
+            if (gyroPower > 1){
+                gyroPower = 1;
+            }
+            motorLeft.setPower(gyroPower);
+            motorRight.setPower(-gyroPower);
+
             /*
             if (Math.abs(error_degrees) > 30) {
                 motorLeft.setPower(.5 * Math.signum(error_degrees));
@@ -96,7 +96,6 @@ public class TestGyro3 extends LinearOpMode {
         motorLeft.setPower(0);
         motorRight.setPower(0);
         idle();
-        checkGyro();
     }
 
     public void checkGyro(){

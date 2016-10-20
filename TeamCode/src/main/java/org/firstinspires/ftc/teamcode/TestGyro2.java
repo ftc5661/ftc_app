@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.util.Range;
  * Created by 5661 on 10/17/2016.
  */
 @Autonomous(name = "TestGyro2", group = "Autonomous OpMode")
+@Disabled
 public class TestGyro2 extends LinearOpMode {
 
     //declares motors, servos, and other data
