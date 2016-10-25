@@ -58,7 +58,6 @@ public class IanBeaconTest_101016 extends OpMode {
 
         telemetry.addData("Left Stick", leftStick);
         telemetry.addData("Right Stick", rightStick);
-        telemetry.addData("Beacon Presser", beaconPoker);
         telemetry.update();
 
         if(gamepad1.a) {

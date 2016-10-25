@@ -17,8 +17,11 @@ public class TestGyro3 extends LinearOpMode {
     DcMotor motorLeft;
     ModernRoboticsI2cGyro mrGyro;
     GyroSensor sensorGyro;
-    int numRev = 0;
-    int prevHeading;
+    public int numRev = 0;
+    public int prevHeading;
+    public double DegreesToTurn;
+    public float left = -1;
+    public float right = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -51,11 +54,11 @@ public class TestGyro3 extends LinearOpMode {
         //wait for the game to start(press the play button)
         waitForStart();
 
+        //turn(90, right);
         turnGyroRight(90);
 
-        telemetry.addData(">", "Done Turning");
+        telemetry.addData(">", "Autonomous Done");
         telemetry.update();
-        sleep(1000);
 
     }
 
@@ -67,7 +70,7 @@ public class TestGyro3 extends LinearOpMode {
 
         double target = mrGyro.getHeading() + deg;
         double TOLERANCE = 2;
-        double slowMove = 0.0;
+        double slowMove = 8;
         //double error_degrees = target_angle_degrees - zAccumulated;
         //double motor_output = (error_degrees / 180.0) + (error_degrees > 0 ? -.1 : .1);
 
@@ -75,10 +78,8 @@ public class TestGyro3 extends LinearOpMode {
             telemetry.addData(">", "Robot is currently turning");
             telemetry.update();
 
-            double gyroPower = ((target - mrGyro.getHeading())/180) + slowMove;//((target - mrGyro.getHeading() > 0 ? -.1 : .1));
-            if (gyroPower > 1){
-                gyroPower = 1;
-            }
+            //double gyroPower = (target - mrGyro.getHeading())/(5*target); //((target - mrGyro.getHeading() > 0 ? -.1 : .1));
+            double gyroPower = 0.0331111*1.2; //minimun motor value //add this to above gyropower so 0 is ajusted // TODO
             motorLeft.setPower(gyroPower);
             motorRight.setPower(-gyroPower);
 
@@ -95,9 +96,8 @@ public class TestGyro3 extends LinearOpMode {
         }
         motorLeft.setPower(0);
         motorRight.setPower(0);
-        idle();
     }
-
+/*
     public void checkGyro(){
         telemetry.addData(">", "Checking if gyro has turned over");
         telemetry.update();
@@ -113,9 +113,47 @@ public class TestGyro3 extends LinearOpMode {
             prevHeading = currHeading;
         }
     }
-
+    */
+/*
     public int getGyroHeading(){
         return numRev*360 + mrGyro.getHeading();
+    }
+    */
+
+    public void turn(int Degrees, float Direction){
+        if (Direction < 0){
+            DegreesToTurn = 360 - Degrees;
+        } else {
+            DegreesToTurn = Degrees;
+        }
+
+        if (Direction > 0){
+            while (!isStopRequested() && mrGyro.getHeading() < DegreesToTurn){
+                motorRight.setPower(-0.1);
+                motorLeft.setPower(0.1);
+                telemetry.addData("Heading", mrGyro.getHeading());
+                telemetry.addData(">", "Turning right");
+            }
+            motorLeft.setPower(0);
+            motorRight.setPower(0);
+            telemetry.addData(">","Turning point reached");
+        } else {
+            while (!isStopRequested() && mrGyro.getHeading() > DegreesToTurn){
+                motorRight.setPower(0.1);
+                motorLeft.setPower(-0.1);
+                telemetry.addData("Heading", mrGyro.getHeading());
+                telemetry.addData(">", "Turning left");
+            }
+            motorLeft.setPower(0);
+            motorRight.setPower(0);
+            telemetry.addData(">","Turning point reached");
+        }
+    }
+
+    public void turnUsingCurrentPos(int Degrees, float Direction) throws InterruptedException{ //counter-clockwise
+        //turnGyro turns robot from current position. careful when using this method, small errors in movement can add up!
+
+        turn(Degrees + mrGyro.getIntegratedZValue(), Direction);
     }
 
 }
