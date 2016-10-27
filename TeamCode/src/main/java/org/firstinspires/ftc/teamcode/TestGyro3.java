@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  * Created by 5661 on 10/17/2016.
  */
 @Autonomous(name = "TestGyro3", group = "Autonomous OpMode")
+@Disabled
 public class TestGyro3 extends LinearOpMode {
 
     //declares motors, servos, and other data
@@ -55,7 +57,7 @@ public class TestGyro3 extends LinearOpMode {
         waitForStart();
 
         //turn(90, gyroRight);
-        turnGyroRight(90);
+        turnGyroRight(83);
 
         telemetry.addData(">", "Autonomous Done");
         telemetry.update();
@@ -65,11 +67,20 @@ public class TestGyro3 extends LinearOpMode {
 
     public void turnGyroRight(double deg) throws InterruptedException{
         //Turns robot by using MRGyro mounted on robot, the motors will slow down over time to stay accurate
-        //Remember: .getHeading() goes from 1-359 counterclockwise
+        //Remember: .getHeading() goes from 1-359 clockwise
         //Remember: Mount gryo near front of robot, and lay gyro flat
+
+        double gyroTarget;
 
         //current heading + degrees wanted to turn
         double target = mrGyro.getHeading() + deg;
+
+        //Fixes .getHeading() rollover
+        if (target > 359){
+            gyroTarget = target - 359;
+        } else {
+            gyroTarget = target;
+        }
 
         //while gyro's .getHeading() value is higher than tolerance, then turn
         while (!isStopRequested() && Math.abs(target - mrGyro.getHeading()) > GYRO_TOLERANCE) {
@@ -77,9 +88,9 @@ public class TestGyro3 extends LinearOpMode {
             telemetry.addData("Heading", mrGyro.getHeading());
             telemetry.update();
 
-            double gyroPower = ((target - mrGyro.getHeading())/(6*target)) + GYRO_ZERO_OFFSET;
+            double gyroPower = (Math.abs(target - mrGyro.getHeading())/(6*target)) + GYRO_ZERO_OFFSET;
             motorLeft.setPower(gyroPower);
-            motorRight.setPower(-gyroPower);
+            motorRight.setPower(gyroPower);
                 idle();
             }
 
@@ -91,22 +102,31 @@ public class TestGyro3 extends LinearOpMode {
 
     public void turnGyroLeft(double deg) throws InterruptedException{
         //Turns robot by using MRGyro mounted on robot, the motors will slow down over time to stay accurate
-        //Remember: .getHeading() goes from 1-359 counterclockwise
+        //Remember: .getHeading() goes from 1-359 clockwise
         //Remember: Mount gryo near front of robot, and lay gyro flat
+
+        double gyroTarget;
 
         //changes degrees from right to left
         DegreesToTurn = 360 - deg;
 
         //current heading + degrees wanted to turn
-        double target = mrGyro.getHeading() + DegreesToTurn;
+        double target = mrGyro.getHeading() + deg;
+
+        //Fixes .getHeading() rollover
+        if (target > 359){
+            gyroTarget = target - 359;
+        } else {
+            gyroTarget = target;
+        }
 
         //while gyro's .getHeading() value is higher than tolerance, then turn
         while (!isStopRequested() && Math.abs(target - mrGyro.getHeading()) > GYRO_TOLERANCE) {
-            telemetry.addData(">", "Robot is currently turning right");
+            telemetry.addData(">", "Robot is currently turning left");
             telemetry.addData("Heading", mrGyro.getHeading());
             telemetry.update();
 
-            double gyroPower = ((target - mrGyro.getHeading())/(6*target)) + GYRO_ZERO_OFFSET;
+            double gyroPower = (Math.abs(target - mrGyro.getHeading())/(6*target)) + GYRO_ZERO_OFFSET;
             motorLeft.setPower(-gyroPower);
             motorRight.setPower(gyroPower);
             idle();
@@ -116,15 +136,6 @@ public class TestGyro3 extends LinearOpMode {
         motorRight.setPower(0);
         telemetry.addData(">","Turning point reached");
         telemetry.update();
-    }
-
-    public void turnRightGyroCurPos(int Degrees) throws InterruptedException{ //counter-clockwise
-        //turnGyro turns robot from current position. careful when using this method, small errors in movement can add up!
-        turnGyroRight(Degrees + mrGyro.getHeading());
-    }
-    public void turnLeftGyroCurPos(int Degrees) throws InterruptedException{ //counter-clockwise
-        //turnGyro turns robot from current position. careful when using this method, small errors in movement can add up!
-        turnGyroLeft(Degrees + mrGyro.getHeading());
     }
 /*
     public int getGyroHeading(){

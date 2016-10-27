@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  * Test Autonomous program for testing the gyro on the 5661 programming robot
  */
 @Autonomous(name = "TestGyro", group = "Autonomous OpMode")
-@Disabled
 public class TestGyro extends LinearOpMode{
 
     //declares motors, servos, and other data
@@ -20,6 +19,9 @@ public class TestGyro extends LinearOpMode{
     DcMotor motorLeft;
     GyroSensor sensorGyro;
     ModernRoboticsI2cGyro mrGyro;
+    //GYRO_ZERO_OFFSET makes sure the robot always has enough power, so it doesn't stop just before the target, due to weight, friction, etc.
+    //IMPORTANT: CHANGE THIS VALUE IF ROBOT HAS CHANGED SIGNIFICANTLY, I.E. NEW WHEELS, MORE MOTOR, MORE/LESS WEIGHT, ETC.
+    public double GYRO_ZERO_OFFSET = 0.06;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -37,6 +39,7 @@ public class TestGyro extends LinearOpMode{
         telemetry.addData(">", "Gyro Calibrating. Do Not move!");
         telemetry.update();
         mrGyro.calibrate();
+        idle();
         // DO NOT MOVE SENSOR WHILE BLUE LIGHT IS SOLID
 
         while (!isStopRequested() && mrGyro.isCalibrating()){
@@ -51,36 +54,43 @@ public class TestGyro extends LinearOpMode{
         //wait for the game to start(press the play button)
         waitForStart();
 
-        turnAbsoluteGyro(90);
+        turnAbsoluteGyro(-180);
 
     }
 
     public void turnAbsoluteGyro(int target) throws InterruptedException{
         //turnAbsoluteGyro turns robot from initial calibration, you have to know how much to turn according from your starting point
 
-        telemetry.addData(">", "Turning robot ", target, "degees");
+        telemetry.addData(">", "Turning robot using gyro");
         telemetry.update();
 
         int zAccumulated = mrGyro.getIntegratedZValue(); //set variables to gyro readings
-        double turnSpeed = 0.15;
 
-        while(!isStopRequested() && Math.abs(zAccumulated - target) > 2){
+        while(!isStopRequested() && Math.abs(zAccumulated - target) > 3){
 
             if (zAccumulated > target){ //if gyro is positive,  the robot will turn right
-                motorLeft.setPower(turnSpeed);
-                motorRight.setPower(-turnSpeed);
+                telemetry.addData(">", "Robot is currently turning right");
+                telemetry.addData("IntegratedZValue:", zAccumulated);
+                telemetry.update();
 
+                double error_degrees = target - zAccumulated;
+                double motor_output = (error_degrees / (7 * target)) + GYRO_ZERO_OFFSET;
+                motorLeft.setPower(motor_output);
+                motorRight.setPower(-motor_output);
             }
 
             if (zAccumulated < target){ //if gyro is negative, the robot will turn left
-                motorLeft.setPower(-turnSpeed);
-                motorRight.setPower(turnSpeed);
+                telemetry.addData(">", "Robot is currently turning left");
+                telemetry.addData("IntegratedZValue:", zAccumulated);
+                telemetry.update();
 
+                double error_degrees = target - zAccumulated;
+                double motor_output = (error_degrees / (7 * target)) + GYRO_ZERO_OFFSET;
+                motorLeft.setPower(-motor_output);
+                motorRight.setPower(motor_output);
             }
 
             zAccumulated = mrGyro.getIntegratedZValue(); //set variables to gyro readings
-            telemetry.addData("1. accu", String.format("%03d", zAccumulated));
-            telemetry.update();
             idle();
 
         }
@@ -88,9 +98,6 @@ public class TestGyro extends LinearOpMode{
         //stops motors
         motorLeft.setPower(0);
         motorRight.setPower(0);
-
-        telemetry.addData("1. accu", String.format("%03d", zAccumulated));
-        telemetry.update();
 
         idle();
 
