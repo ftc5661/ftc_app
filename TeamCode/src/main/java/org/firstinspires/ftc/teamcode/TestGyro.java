@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by 5661 on 10/12/2016.
@@ -54,7 +55,7 @@ public class TestGyro extends LinearOpMode{
         //wait for the game to start(press the play button)
         waitForStart();
 
-        turnAbsoluteGyro(-180);
+        turnAbsoluteGyro(90);
 
     }
 
@@ -64,33 +65,36 @@ public class TestGyro extends LinearOpMode{
         telemetry.addData(">", "Turning robot using gyro");
         telemetry.update();
 
-        int zAccumulated = mrGyro.getIntegratedZValue(); //set variables to gyro readings
+        while(!isStopRequested() && Math.abs(mrGyro.getIntegratedZValue() - target) > 3){
 
-        while(!isStopRequested() && Math.abs(zAccumulated - target) > 3){
-
-            if (zAccumulated > target){ //if gyro is positive,  the robot will turn right
+            if (mrGyro.getIntegratedZValue() > target){ //if gyro is positive,  the robot will turn right
                 telemetry.addData(">", "Robot is currently turning right");
-                telemetry.addData("IntegratedZValue:", zAccumulated);
+                telemetry.addData("IntegratedZValue:", mrGyro.getIntegratedZValue());
                 telemetry.update();
 
-                double error_degrees = target - zAccumulated;
+                double error_degrees = target - mrGyro.getIntegratedZValue();
                 double motor_output = (error_degrees / (7 * target)) + GYRO_ZERO_OFFSET;
+
+                motor_output = Range.clip(motor_output, -1, 1);
+
                 motorLeft.setPower(motor_output);
                 motorRight.setPower(-motor_output);
             }
 
-            if (zAccumulated < target){ //if gyro is negative, the robot will turn left
+            if (mrGyro.getIntegratedZValue() < target){ //if gyro is negative, the robot will turn left
                 telemetry.addData(">", "Robot is currently turning left");
-                telemetry.addData("IntegratedZValue:", zAccumulated);
+                telemetry.addData("IntegratedZValue:", mrGyro.getIntegratedZValue());
                 telemetry.update();
 
-                double error_degrees = target - zAccumulated;
+                double error_degrees = target - mrGyro.getIntegratedZValue();
                 double motor_output = (error_degrees / (7 * target)) + GYRO_ZERO_OFFSET;
+
+                motor_output = Range.clip(motor_output, -1, 1);
+
                 motorLeft.setPower(-motor_output);
                 motorRight.setPower(motor_output);
             }
 
-            zAccumulated = mrGyro.getIntegratedZValue(); //set variables to gyro readings
             idle();
 
         }
