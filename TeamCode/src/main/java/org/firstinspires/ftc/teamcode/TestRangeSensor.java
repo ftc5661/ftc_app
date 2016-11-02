@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
  * Created by 5661 on 10/31/2016.
+ * Autonomous program for testing the Modern Robotics Range Sensor on the 5661 programming robot
  */
 
 @Autonomous(name = "TestRangeSensor", group = "Autonomous OpMode")
@@ -52,7 +53,7 @@ public class TestRangeSensor extends LinearOpMode {
             //motorLeft.setPower(0.03636363636 * (rangeSensor.rawUltrasonic()) - 0.19090909090);
             //motorRight.setPower(-0.03636363636 * (rangeSensor.rawUltrasonic()) + 0.79090909090);
 
-            //TODO good but it's fucking slow
+            //TODO works but it's fucking slow, also glitches if robot is outside the range parameters
             motorLeft.setPower(0.027272727272727272727 * (rangeSensor.rawUltrasonic()) - 0.218181818181818181818);
             motorRight.setPower(-0.027272727272727272727 * (rangeSensor.rawUltrasonic()) + 0.518181818181818181818);
 

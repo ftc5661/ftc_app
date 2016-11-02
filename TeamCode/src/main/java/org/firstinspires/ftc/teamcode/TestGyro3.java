@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 
 /**
  * Created by 5661 on 10/17/2016.
+ * Autonomous program for testing the Modern Robotics Gyro Sensor for the 5661 robot
  */
 @Autonomous(name = "TestGyro3", group = "Autonomous OpMode")
 @Disabled
