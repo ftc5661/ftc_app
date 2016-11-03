@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @TeleOp(name = "IanBeaconTest_101016", group = "TeleOp")
-@Disabled
 public class IanBeaconTest_101016 extends OpMode {
 
     //Declare motors

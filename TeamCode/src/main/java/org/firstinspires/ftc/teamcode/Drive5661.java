@@ -3,43 +3,38 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by 5661 on 9/10/2016.
+ * Created by 5661 on 11/3/2016.
  * TeleOp program for driving the 5661 robot
  */
-@TeleOp(name = "Test Drive", group = "TeleOp" )
-public class testdrive extends OpMode {
+@TeleOp(name = "Drive5661", group = "TeleOp")
+public class Drive5661 extends OpMode {
 
-    //declare DcMotors
+    //declare motors, servos, sensors
     DcMotor motorRight;
     DcMotor motorLeft;
     DcMotor motorBallCollect;
-    //declare Servos
     Servo servoGateLeft;
     Servo servoGateRight;
-    //used for servo position
     double servoPositionLeft;
     double servoPositionRight;
 
     @Override
     public void init() {
-        //set motor names
-        motorRight = hardwareMap.dcMotor.get("right_motor");
+        //set java names to hardware map names
         motorLeft = hardwareMap.dcMotor.get("left_motor");
+        motorRight = hardwareMap.dcMotor.get("right_motor");
         motorBallCollect = hardwareMap.dcMotor.get("collect_motor");
-        //reverse right motor
-        motorRight.setDirection(DcMotor.Direction.REVERSE);
-        //set servo name
         servoGateLeft = hardwareMap.servo.get("left_servo");
         servoGateRight = hardwareMap.servo.get("right_servo");
-        //sets start position
-        servoGateLeft.setPosition(0);
-        servoGateRight.setPosition(0);
+        //reverse right motor to drive
+        motorRight.setDirection(DcMotor.Direction.REVERSE);
 
-        telemetry.addData(">", "Robot Initialized");
-        telemetry.update();
+        servoPositionLeft = 1;
+        servoPositionRight = 0;
 
     }
 
@@ -50,7 +45,7 @@ public class testdrive extends OpMode {
         float leftStick = -gamepad1.left_stick_y;
         float rightStick = -gamepad1.right_stick_y;
 
-        //makes sure values don't go out of range of -1 to 1
+        //makes sure values don't go out of the range of -1 to 1
         if (leftStick > 1.0){
             leftStick = 1;
         }
@@ -64,30 +59,27 @@ public class testdrive extends OpMode {
             rightStick = -1;
         }
 
-        //sets the power to be the joystick values
+        //sets the wheel motor powers to be the joystick values
         motorRight.setPower(rightStick);
         motorLeft.setPower(leftStick);
 
-        //sets the servo position to the value set from the button pressed from the driver
-        servoGateLeft.setPosition(servoPositionLeft);
-        servoGateRight.setPosition(servoPositionRight);
-
-        //if the a button is pressed, servo close ball in robot gates
-        if (gamepad1.a){
+        //if the a button is pressed, servos close
+        if (gamepad2.a){
             servoPositionLeft = 0;
             servoPositionRight = 1;
-        }
-
-        //if the b button is pressed, servo open gates
-        if (gamepad1.b){
+        } else if (!gamepad2.a){
             servoPositionLeft = 1;
             servoPositionRight = 0;
         }
 
+        //sets servo position to servoPosition var
+        servoGateLeft.setPosition(servoPositionLeft);
+        servoGateRight.setPosition(servoPositionRight);
+
         //if right bumper is pressed, motor collects ball into robot
-        if (gamepad1.right_bumper){
-            motorBallCollect.setPower(0.5);
-        } else if (!gamepad1.right_bumper){
+        if (gamepad2.right_bumper){
+            motorBallCollect.setPower(-0.5);
+        } else if (!gamepad2.right_bumper){
             motorBallCollect.setPower(0);
         }
 

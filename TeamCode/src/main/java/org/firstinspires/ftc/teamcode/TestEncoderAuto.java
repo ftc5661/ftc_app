@@ -19,7 +19,6 @@ public class TestEncoderAuto extends LinearOpMode{
     //declares motors, servos, and other electronics
     DcMotor motorRight;
     DcMotor motorLeft;
-    Servo turnMetal;
     CRServo beaconPoker;
     ColorSensor colorSensor;
     ColorSensor highColorSensor;
@@ -32,8 +31,10 @@ public class TestEncoderAuto extends LinearOpMode{
     int encoderTicks = 1120;
     double wheelCircumference = 23.9268;
     //motor and servo powers
-    double fullPower = 1;
-    double halfPower = 0.5;
+    double powerFull = 1;
+    double powerHalf = 0.5;
+    double powerThreeTenths = 0.3;
+    double powerEightTenths = 0.8;
     double CRServoStop = 0;
     double CRServoForward = 1;
     double CRServoBackward = -1;
@@ -49,7 +50,6 @@ public class TestEncoderAuto extends LinearOpMode{
         motorLeft = hardwareMap.dcMotor.get("left_motor");
         //reverse right motor to drive correctly
         motorRight.setDirection(DcMotor.Direction.REVERSE);
-        turnMetal = hardwareMap.servo.get("servo1");
         beaconPoker = hardwareMap.crservo.get("beacon_poker");
         CDI = hardwareMap.deviceInterfaceModule.get("Device Interface Module 1");
         //set correct color sensor I2cAddress names
@@ -60,7 +60,6 @@ public class TestEncoderAuto extends LinearOpMode{
 
         TurnOffLEDs();
         //sets start position of servos
-        turnMetal.setPosition(0.5);
         beaconPoker.setPower(CRServoStop);
 
         //wait for the game to start(press the play button)
@@ -70,15 +69,15 @@ public class TestEncoderAuto extends LinearOpMode{
          *          AUTONOMOUS MOVEMENTS BEGIN HERE
          */
 
-        DriveForwardDistance(fullPower, 100);
-        TurnRightDistance(halfPower, 15);
-        DriveForwardDistance(fullPower, 135);
-        TurnLeftDistance(halfPower, 12);
-        DriveForwardDistance(halfPower, 30);
-        TurnLeftDistance(halfPower, 6);
+        DriveForwardDistance(powerEightTenths, 100);
+        TurnRightDistance(powerThreeTenths, 15);
+        DriveForwardDistance(powerEightTenths, 120);
+        TurnLeftDistance(powerThreeTenths, 12);
+        DriveForwardDistance(powerThreeTenths, 30);
+        TurnLeftDistance(powerThreeTenths, 6);
         findWhite();
         findHighColor();
-        DriveForwardDistance(0.3, -90);
+        DriveForwardDistance(powerThreeTenths, -90);
         findWhiteBackwards();
         findHighColor();
         StopDriving();
@@ -168,12 +167,6 @@ public class TestEncoderAuto extends LinearOpMode{
         StopDriving();
         ModeRunUsingEncoder();
         idle();
-    }
-
-    public void SetServoPosition(double servoPosition) throws InterruptedException {
-        //sets the servo position to 'servoPosition'
-        turnMetal.setPosition(servoPosition);
-        sleep(500);
     }
 
     public void DriveForward(double power) throws InterruptedException {
@@ -317,7 +310,7 @@ public class TestEncoderAuto extends LinearOpMode{
         ModeRunWithoutEncoders();
 
         while(!isStopRequested() && highColorSensor.red() == 0 && highColorSensor.blue() == 0){
-            //while highColorSensor cannot read any color values, it moves the robot at an angle back, then forward
+            //while highColorSensor cannot read any color values, it moves the robot back
 
             CDI.setLED(0, false);       //Blue OFF
             CDI.setLED(1, false);       //Red OFF
@@ -325,20 +318,12 @@ public class TestEncoderAuto extends LinearOpMode{
             //notify driver robot's current color value
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
-            telemetry.update();
-
             //notifies driver of error status
-            telemetry.addData("ERROR: ","sensor cannot find color values");
+            telemetry.addData("ERROR:","sensor cannot find color values");
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
-
-            ModeRunToPosition();
-
-            TurnLeftDistance(0.3, 10);
-            DriveForwardDistance(0.3, -10);
-            TurnRightDistance(0.3, 10);
-            DriveForwardDistance(0.3, 10);
-
+            //error, equal color value, moving back
+            DriveForward(-0.1);
             idle();
         }
 
@@ -352,10 +337,8 @@ public class TestEncoderAuto extends LinearOpMode{
             //notify driver robot's current color value
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
-            telemetry.update();
-
             //notifies driver of error status
-            telemetry.addData("ERROR: ","colors are equal value");
+            telemetry.addData("ERROR:","colors are equal value");
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
@@ -376,13 +359,11 @@ public class TestEncoderAuto extends LinearOpMode{
             //notify driver robot's current color value
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
-            telemetry.update();
-
             //notifies driver of beacon status
-            telemetry.addData("Left side of beacon is ","RED");
+            telemetry.addData("Left side of beacon is","RED");
             telemetry.update();
 
-            DriveForwardDistance(0.1, -13);
+            DriveForwardDistance(0.1, -14);
             PokeBeacon();
 
         } else if (highColorSensor.red() < highColorSensor.blue()){
@@ -396,10 +377,8 @@ public class TestEncoderAuto extends LinearOpMode{
             //notify driver robot's current color value
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
-            telemetry.update();
-
             //notifies driver of beacon status
-            telemetry.addData("Left side of beacon is ","BLUE");
+            telemetry.addData("Left side of beacon is","BLUE");
             telemetry.update();
 
             PokeBeacon();
@@ -423,7 +402,7 @@ public class TestEncoderAuto extends LinearOpMode{
     public void PokeBeacon(){
         //Moves CRServo to hit beacon and move back
         beaconPoker.setPower(CRServoForward);
-        sleep(3000);
+        sleep(2000);
         beaconPoker.setPower(CRServoBackward);
         sleep(2000);
         beaconPoker.setPower(CRServoStop);
