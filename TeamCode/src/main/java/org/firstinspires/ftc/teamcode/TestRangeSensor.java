@@ -50,12 +50,12 @@ public class TestRangeSensor extends LinearOpMode {
             telemetry.update();
 
 
-            //motorLeft.setPower(0.03636363636 * (rangeSensor.rawUltrasonic()) - 0.19090909090);
-            //motorRight.setPower(-0.03636363636 * (rangeSensor.rawUltrasonic()) + 0.79090909090);
+            //motorLeft.setPower(0.033 * (rangeSensor.rawUltrasonic()) - 0.326); //motor speed of 0.4?
+            //motorRight.setPower(-0.033 * (rangeSensor.rawUltrasonic()) + 0.726);
 
-            //TODO works but it's fucking slow, also glitches if robot is outside the range parameters
-            motorLeft.setPower(0.027272727272727272727 * (rangeSensor.rawUltrasonic()) - 0.218181818181818181818);
-            motorRight.setPower(-0.027272727272727272727 * (rangeSensor.rawUltrasonic()) + 0.518181818181818181818);
+            motorLeft.setPower(-0.0083 * (rangeSensor.rawUltrasonic()) - 0.1); //motor speed of 0.4?
+            motorRight.setPower(0.0083 * (rangeSensor.rawUltrasonic()) - 0.4);
+
 
             idle();
         }

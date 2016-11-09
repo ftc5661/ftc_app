@@ -55,7 +55,8 @@ public class TestGyro extends LinearOpMode{
         //wait for the game to start(press the play button)
         waitForStart();
 
-        turnAbsoluteGyro(90);
+        //this should account for overturn
+        turnAbsoluteGyro(80);
 
     }
 
@@ -72,13 +73,13 @@ public class TestGyro extends LinearOpMode{
                 telemetry.addData("IntegratedZValue:", mrGyro.getIntegratedZValue());
                 telemetry.update();
 
-                double error_degrees = target - mrGyro.getIntegratedZValue();
-                double motor_output = (error_degrees / (7 * target)) + GYRO_ZERO_OFFSET;
+                //double error_degrees = target - mrGyro.getIntegratedZValue();
+                //double motor_output = (error_degrees / (7 * target)) + GYRO_ZERO_OFFSET;
 
-                motor_output = Range.clip(motor_output, -1, 1);
+                //motor_output = Range.clip(motor_output, -1, 1);
 
-                motorLeft.setPower(motor_output);
-                motorRight.setPower(-motor_output);
+                motorLeft.setPower(0.15);
+                motorRight.setPower(-0.15);
             }
 
             if (mrGyro.getIntegratedZValue() < target){ //if gyro is negative, the robot will turn left
@@ -86,13 +87,13 @@ public class TestGyro extends LinearOpMode{
                 telemetry.addData("IntegratedZValue:", mrGyro.getIntegratedZValue());
                 telemetry.update();
 
-                double error_degrees = target - mrGyro.getIntegratedZValue();
-                double motor_output = (error_degrees / (7 * target)) + GYRO_ZERO_OFFSET;
+                //double error_degrees = target - mrGyro.getIntegratedZValue();
+                //double motor_output = (error_degrees / (7 * target)) + GYRO_ZERO_OFFSET;
 
-                motor_output = Range.clip(motor_output, -1, 1);
+                //motor_output = Range.clip(motor_output, -1, 1);
 
-                motorLeft.setPower(-motor_output);
-                motorRight.setPower(motor_output);
+                motorLeft.setPower(-0.1);
+                motorRight.setPower(0.1);
             }
 
             idle();
