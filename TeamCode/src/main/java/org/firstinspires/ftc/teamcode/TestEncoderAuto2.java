@@ -9,14 +9,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
-import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by 5661 on 9/21/2016.
+ * Created by 5661 on 11/10/2016.
  * Full Autonomous program for the 5661 programming robot
  */
-@Autonomous(name = "Autonomous Blue Side", group = "Autonomous OpMode")
-public class TestEncoderAuto extends LinearOpMode{
+@Autonomous(name = "Autonomous Red Side", group = "Autonomous OpMode")
+public class TestEncoderAuto2 extends LinearOpMode {
     //declares motors, servos, and other electronics
     DcMotor motorRight;
     DcMotor motorLeft;
@@ -45,8 +44,8 @@ public class TestEncoderAuto extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         //connects motors, servos, and other electronics code names to config file names
-        motorRight = hardwareMap.dcMotor.get("right_motor");
-        motorLeft = hardwareMap.dcMotor.get("left_motor");
+        motorLeft = hardwareMap.dcMotor.get("right_motor");
+        motorRight = hardwareMap.dcMotor.get("left_motor");
         //reverse right motor to drive correctly
         motorRight.setDirection(DcMotor.Direction.REVERSE);
         beaconPoker = hardwareMap.crservo.get("beacon_poker");
@@ -89,13 +88,13 @@ public class TestEncoderAuto extends LinearOpMode{
          */
 
         driveForwardDistance(0.8, 100); //speed then distance
-        turnRightDistance(0.15, 15);
+        turnLeftDistance(0.15, 15);
         //turnAbsoluteGyro(48, turnRight);
         driveForwardDistance(0.8, 115);
-        turnLeftDistance(0.15, 12);
+        turnRightDistance(0.15, 12);
         //turnGyro(35, turnLeft);
         driveForwardDistance(0.3, 30);
-        turnLeftDistance(0.15, 6);
+        turnRightDistance(0.15, 6);
         //turnGyro(14, turnLeft);
         findWhite();
         findHighColor();
@@ -113,8 +112,7 @@ public class TestEncoderAuto extends LinearOpMode{
         telemetry.addData(">", "Path Complete");
         telemetry.update();
         sleep(500);
-        }
-
+    }
     public void driveForwardDistance(double power, int distance) throws InterruptedException {
         //DriveForwardDistance is used to move the robot forward a specific distance
 
