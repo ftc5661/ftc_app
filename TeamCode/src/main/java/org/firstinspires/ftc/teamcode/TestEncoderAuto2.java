@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 
 /**
  * Created by 5661 on 11/10/2016.
- * Full Autonomous program for the 5661 programming robot
+ * Full Autonomous program for the 5661 programming robot on the red side
  */
 @Autonomous(name = "Autonomous Red Side", group = "Autonomous OpMode")
 public class TestEncoderAuto2 extends LinearOpMode {
@@ -90,12 +90,13 @@ public class TestEncoderAuto2 extends LinearOpMode {
         driveForwardDistance(0.8, 100); //speed then distance
         turnLeftDistance(0.15, 15);
         //turnAbsoluteGyro(48, turnRight);
-        driveForwardDistance(0.8, 115);
+        driveForwardDistance(0.8, 125);
         turnRightDistance(0.15, 12);
         //turnGyro(35, turnLeft);
         driveForwardDistance(0.3, 30);
         turnRightDistance(0.15, 6);
         //turnGyro(14, turnLeft);
+        driveForwardDistance(0.2, 40);
         findWhite();
         findHighColor();
         driveForwardDistance(0.3, -95);
@@ -237,7 +238,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
 
             if (mrGyro.getIntegratedZValue() > fixedTarget){ //if gyro is positive,  the robot will turn right
                 telemetry.addData(">", "Robot is currently turning right");
-                telemetry.addData("IntegratedZValue:", mrGyro.getIntegratedZValue());
+                telemetry.addData("IntegratedZValue", mrGyro.getIntegratedZValue());
                 telemetry.update();
 
                 motorLeft.setPower(0.1);
@@ -246,7 +247,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
 
             if (mrGyro.getIntegratedZValue() < fixedTarget){ //if gyro is negative, the robot will turn left
                 telemetry.addData(">", "Robot is currently turning left");
-                telemetry.addData("IntegratedZValue:", mrGyro.getIntegratedZValue());
+                telemetry.addData("IntegratedZValue", mrGyro.getIntegratedZValue());
                 telemetry.update();
 
                 motorLeft.setPower(-0.1);
@@ -370,7 +371,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
             //notifies driver of error status
-            telemetry.addData("ERROR:","sensor cannot find color values");
+            telemetry.addData("ERROR","sensor cannot find color values");
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
@@ -388,7 +389,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
             //notifies driver of error status
-            telemetry.addData("ERROR:","colors are equal value");
+            telemetry.addData("ERROR","colors are equal value");
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
@@ -413,7 +414,6 @@ public class TestEncoderAuto2 extends LinearOpMode {
             telemetry.addData("Left side of beacon is","RED");
             telemetry.update();
 
-            driveForwardDistance(0.1, -13);
             pokeBeacon();
 
         } else if (highColorSensor.red() < highColorSensor.blue()){
@@ -431,6 +431,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
             telemetry.addData("Left side of beacon is","BLUE");
             telemetry.update();
 
+            driveForwardDistance(0.1, 13);
             pokeBeacon();
         }
 
@@ -449,9 +450,9 @@ public class TestEncoderAuto2 extends LinearOpMode {
     public void pokeBeacon(){
         //Moves CRServo to hit beacon and move back
         beaconPoker.setPower(CRServoForward);
-        sleep(2500);
+        sleep(3000);
         beaconPoker.setPower(CRServoBackward);
-        sleep(1500);
+        sleep(1700);
         beaconPoker.setPower(CRServoStop);
         sleep(50);
     }

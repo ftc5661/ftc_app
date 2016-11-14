@@ -24,10 +24,12 @@ public class TestPokerTime extends LinearOpMode {
 
         waitForStart();
 
+        telemetry.addData("Moving", "123iammovingveryfast");
+        telemetry.update();
         beaconPoker.setPower(CRServoForward);
-        sleep(2500);
+        sleep(3000);
         beaconPoker.setPower(CRServoBackward);
-        sleep(1500);
+        sleep(1700);
         beaconPoker.setPower(CRServoStop);
         sleep(50);
 

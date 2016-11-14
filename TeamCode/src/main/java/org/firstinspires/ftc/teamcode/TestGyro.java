@@ -70,7 +70,7 @@ public class TestGyro extends LinearOpMode{
 
             if (mrGyro.getIntegratedZValue() > target){ //if gyro is positive,  the robot will turn right
                 telemetry.addData(">", "Robot is currently turning right");
-                telemetry.addData("IntegratedZValue:", mrGyro.getIntegratedZValue());
+                telemetry.addData("IntegratedZValue", mrGyro.getIntegratedZValue());
                 telemetry.update();
 
                 //double error_degrees = target - mrGyro.getIntegratedZValue();
@@ -84,7 +84,7 @@ public class TestGyro extends LinearOpMode{
 
             if (mrGyro.getIntegratedZValue() < target){ //if gyro is negative, the robot will turn left
                 telemetry.addData(">", "Robot is currently turning left");
-                telemetry.addData("IntegratedZValue:", mrGyro.getIntegratedZValue());
+                telemetry.addData("IntegratedZValue", mrGyro.getIntegratedZValue());
                 telemetry.update();
 
                 //double error_degrees = target - mrGyro.getIntegratedZValue();

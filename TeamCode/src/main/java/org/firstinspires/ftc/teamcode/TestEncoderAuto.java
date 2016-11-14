@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by 5661 on 9/21/2016.
- * Full Autonomous program for the 5661 programming robot
+ * Full Autonomous program for the 5661 programming robot on the blue side
  */
 @Autonomous(name = "Autonomous Blue Side", group = "Autonomous OpMode")
 public class TestEncoderAuto extends LinearOpMode{
@@ -239,7 +239,7 @@ public class TestEncoderAuto extends LinearOpMode{
 
             if (mrGyro.getIntegratedZValue() > fixedTarget){ //if gyro is positive,  the robot will turn right
                 telemetry.addData(">", "Robot is currently turning right");
-                telemetry.addData("IntegratedZValue:", mrGyro.getIntegratedZValue());
+                telemetry.addData("IntegratedZValue", mrGyro.getIntegratedZValue());
                 telemetry.update();
 
                 motorLeft.setPower(0.1);
@@ -248,7 +248,7 @@ public class TestEncoderAuto extends LinearOpMode{
 
             if (mrGyro.getIntegratedZValue() < fixedTarget){ //if gyro is negative, the robot will turn left
                 telemetry.addData(">", "Robot is currently turning left");
-                telemetry.addData("IntegratedZValue:", mrGyro.getIntegratedZValue());
+                telemetry.addData("IntegratedZValue", mrGyro.getIntegratedZValue());
                 telemetry.update();
 
                 motorLeft.setPower(-0.1);
@@ -372,7 +372,7 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
             //notifies driver of error status
-            telemetry.addData("ERROR:","sensor cannot find color values");
+            telemetry.addData("ERROR","sensor cannot find color values");
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
@@ -390,7 +390,7 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
             //notifies driver of error status
-            telemetry.addData("ERROR:","colors are equal value");
+            telemetry.addData("ERROR","colors are equal value");
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
