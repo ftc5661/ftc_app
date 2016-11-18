@@ -12,23 +12,21 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Test TeleOp program for testing the programming robot beacon presser CRServo
  */
 
-@TeleOp(name = "IanBeaconTest_101016", group = "TeleOp")
+@TeleOp(name = "DontUseThisProgram", group = "TeleOp")
 public class IanBeaconTest_101016 extends OpMode {
 
     //Declare motors
-    DcMotor motorRight1;
-    DcMotor motorLeft1;
-    CRServo beaconPoker;
+    DcMotor motorRight;
+    DcMotor motorLeft;
 
     @Override
     public void init() {
 
         //set motor names
-        motorRight1 = hardwareMap.dcMotor.get("right_motor");
-        motorLeft1 = hardwareMap.dcMotor.get("left_motor");
-        beaconPoker = hardwareMap.crservo.get("beacon_poker");
+        motorRight = hardwareMap.dcMotor.get("right_motor");
+        motorLeft = hardwareMap.dcMotor.get("left_motor");
         //reverse right motors
-        motorRight1.setDirection(DcMotor.Direction.REVERSE);
+        motorRight.setDirection(DcMotor.Direction.REVERSE);
 
     }
 
@@ -54,24 +52,12 @@ public class IanBeaconTest_101016 extends OpMode {
         }
 
         //sets the power to be the joystick values
-        motorRight1.setPower(rightStick);
-        motorLeft1.setPower(leftStick);
+        motorRight.setPower(rightStick);
+        motorLeft.setPower(leftStick);
 
         telemetry.addData("Left Stick", leftStick);
         telemetry.addData("Right Stick", rightStick);
         telemetry.update();
-
-        if(gamepad1.a) {
-            beaconPoker.setPower(1);
-        }
-
-        if(gamepad1.b) {
-            beaconPoker.setPower(-1);
-        }
-
-        if(!gamepad1.a && !gamepad1.b) {
-            beaconPoker.setPower(0);
-        }
 
     }
 
