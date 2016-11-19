@@ -87,10 +87,10 @@ public class TestEncoderAuto2 extends LinearOpMode {
          *          AUTONOMOUS MOVEMENTS BEGIN HERE
          */
 
-        driveForwardDistance(0.8, 100); //speed then distance
+        driveForwardDistance(0.8, 90); //speed then distance
         turnLeftDistance(0.15, 15);
         //turnAbsoluteGyro(48, turnRight);
-        driveForwardDistance(0.8, 125);
+        driveForwardDistance(0.8, 100);
         turnRightDistance(0.15, 12);
         //turnGyro(35, turnLeft);
         driveForwardDistance(0.3, 30);

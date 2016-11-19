@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.util.Range;
  * Test Autonomous program for testing the gyro on the 5661 programming robot
  */
 @Autonomous(name = "TestGyro", group = "Autonomous OpMode")
+@Disabled
 public class TestGyro extends LinearOpMode{
 
     //declares motors, servos, and other data

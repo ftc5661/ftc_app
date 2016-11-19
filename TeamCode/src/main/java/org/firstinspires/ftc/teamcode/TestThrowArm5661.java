@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * TeleOp program to catapult the ball using the 5661 robot
  */
 @TeleOp(name = "TestThrowArm5661", group = "TeleOp")
+@Disabled
 public class TestThrowArm5661 extends OpMode {
 
     //Declare motors
