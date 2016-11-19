@@ -45,14 +45,14 @@ public class TestEncoderAuto extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         //connects motors, servos, and other electronics code names to config file names
-        motorRight = hardwareMap.dcMotor.get("right_motor");
-        motorLeft = hardwareMap.dcMotor.get("left_motor");
+        motorLeft = hardwareMap.dcMotor.get("right_motor");
+        motorRight = hardwareMap.dcMotor.get("left_motor");
         //reverse right motor to drive correctly
         motorRight.setDirection(DcMotor.Direction.REVERSE);
         beaconPoker = hardwareMap.crservo.get("beacon_poker");
         CDI = hardwareMap.deviceInterfaceModule.get("Device Interface Module 1");
-        sensorGyro = hardwareMap.gyroSensor.get("gyro");
-        mrGyro = (ModernRoboticsI2cGyro) sensorGyro; //allows us to get .getIntegratedZValue()
+        //sensorGyro = hardwareMap.gyroSensor.get("gyro");
+        //mrGyro = (ModernRoboticsI2cGyro) sensorGyro; //allows us to get .getIntegratedZValue()
         //set correct color sensor I2cAddress names
         colorSensor = hardwareMap.colorSensor.get("color");
         colorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
@@ -66,11 +66,12 @@ public class TestEncoderAuto extends LinearOpMode{
         beaconPoker.setPower(CRServoStop);
 
         // start calibrating the gyro.
-        mrGyro.calibrate();
-        sleep(50);
-        idle();
+        //mrGyro.calibrate();
+        //sleep(50);
+        //idle();
         // DO NOT MOVE SENSOR WHILE BLUE LIGHT IS SOLID
 
+        /*
         while (!isStopRequested() && mrGyro.isCalibrating()){
             //Ensure calibration is complete (usually 2 seconds)
             telemetry.addData(">", "Gyro Calibrating. Do Not move!");
@@ -80,6 +81,7 @@ public class TestEncoderAuto extends LinearOpMode{
 
         telemetry.addData(">", "Gyro Calibrated.  Press Start.");
         telemetry.update();
+        */
 
         //wait for the game to start(press the play button)
         waitForStart();
@@ -88,18 +90,19 @@ public class TestEncoderAuto extends LinearOpMode{
          *          AUTONOMOUS MOVEMENTS BEGIN HERE
          */
 
-        driveForwardDistance(0.8, 90); //speed then distance
+        driveForwardDistance(0.8, 76); //speed then distance
         turnRightDistance(0.15, 15);
         //turnAbsoluteGyro(48, turnRight);
-        driveForwardDistance(0.8, 100);
+        driveForwardDistance(0.8, 80);
         turnLeftDistance(0.15, 12);
         //turnGyro(35, turnLeft);
-        driveForwardDistance(0.3, 30);
+        driveForwardDistance(0.3, 25);
         turnLeftDistance(0.15, 6);
         //turnGyro(14, turnLeft);
+        driveForwardDistance(0.2, 30);
         findWhite();
         findHighColor();
-        driveForwardDistance(0.3, -95);
+        driveForwardDistance(0.3, -80);
         findWhiteBackwards();
         findHighColor();
         stopDriving();
@@ -220,6 +223,7 @@ public class TestEncoderAuto extends LinearOpMode{
         motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+    /*
     public void turnAbsoluteGyro(int target, int direction){
         //turnAbsoluteGyro turns robot from initial calibration, you have to know how much to turn according from your starting point
         telemetry.addData(">", "Turning robot using gyro");
@@ -264,6 +268,7 @@ public class TestEncoderAuto extends LinearOpMode{
         //turnGyro turns robot from current position. careful when using this method, small errors in movement can add up!
         turnAbsoluteGyro(target + mrGyro.getIntegratedZValue(), direction);
     }
+    */
     public void findWhite() throws InterruptedException{
 
         //notifies driver robot is moving to find white
@@ -415,7 +420,6 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData("Left side of beacon is","RED");
             telemetry.update();
 
-            driveForwardDistance(0.1, -13);
             pokeBeacon();
 
         } else if (highColorSensor.red() < highColorSensor.blue()){
@@ -433,6 +437,7 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData("Left side of beacon is","BLUE");
             telemetry.update();
 
+            driveForwardDistance(0.1, 13);
             pokeBeacon();
         }
 

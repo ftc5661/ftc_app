@@ -112,10 +112,10 @@ public class Drive5661 extends OpMode {
 
         //if right bumper is pressed, motor collects ball into robot
         if (gamepad2.right_bumper){
-            motorBallCollect.setPower(-0.8);
+            motorBallCollect.setPower(-0.9);
         }
         if (gamepad2.left_bumper){
-            motorBallCollect.setPower(0.8);
+            motorBallCollect.setPower(0.9);
         }
         if (!gamepad2.right_bumper && !gamepad2.left_bumper){
             motorBallCollect.setPower(0);
