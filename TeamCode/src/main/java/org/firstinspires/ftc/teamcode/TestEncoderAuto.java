@@ -24,8 +24,8 @@ public class TestEncoderAuto extends LinearOpMode{
     ColorSensor colorSensor;
     ColorSensor highColorSensor;
     DeviceInterfaceModule CDI;
-    GyroSensor sensorGyro;
-    ModernRoboticsI2cGyro mrGyro;
+    //GyroSensor sensorGyro;
+    //ModernRoboticsI2cGyro mrGyro;
     //value when robot color sensor is centered on white
     int maxFindWhite = 2;
     //value when robot color sensor is half-way on white
@@ -90,10 +90,10 @@ public class TestEncoderAuto extends LinearOpMode{
          *          AUTONOMOUS MOVEMENTS BEGIN HERE
          */
 
-        driveForwardDistance(0.8, 76); //speed then distance
+        driveForwardDistance(0.7, 70); //speed then distance
         turnRightDistance(0.15, 15);
         //turnAbsoluteGyro(48, turnRight);
-        driveForwardDistance(0.8, 80);
+        driveForwardDistance(0.7, 80);
         turnLeftDistance(0.15, 12);
         //turnGyro(35, turnLeft);
         driveForwardDistance(0.3, 25);
@@ -287,7 +287,7 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.update();
 
             //move robot to find white line
-            driveForward(0.07);
+            driveForward(0.15);
             idle();
         }
 
@@ -303,7 +303,7 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.update();
 
             //move robot slowly backwards to find white line
-            driveForward(-0.07);
+            driveForward(-0.15);
             idle();
         }
 
@@ -334,7 +334,7 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.update();
 
             //move robot to find white line
-            driveForward(-0.07);
+            driveForward(-0.15);
             idle();
         }
 
@@ -350,7 +350,7 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.update();
 
             //move robot slowly backwards to find white line
-            driveForward(0.07);
+            driveForward(0.15);
             idle();
         }
 
@@ -381,7 +381,7 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
-            driveForward(-0.1);
+            driveForward(-0.15);
             idle();
         }
 
@@ -399,7 +399,7 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
-            driveForward(-0.1);
+            driveForward(-0.15);
             idle();
         }
 
@@ -437,7 +437,7 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData("Left side of beacon is","BLUE");
             telemetry.update();
 
-            driveForwardDistance(0.1, 13);
+            driveForwardDistance(0.15, 13);
             pokeBeacon();
         }
 
