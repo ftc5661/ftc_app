@@ -30,7 +30,7 @@ public class colorsensortest extends LinearOpMode {
     //NOTE: For AndyMark NeveRest motors, 1120 is one revolution, which is 9.42inches/23.9268cm in distance
     int encoderTicks = 1120;
     double wheelCircumference = 23.9268;
-    double slowSpeed = 0.12;
+    double slowSpeed = 0.13;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -41,8 +41,6 @@ public class colorsensortest extends LinearOpMode {
         motorRight.setDirection(DcMotor.Direction.REVERSE);
         beaconPoker = hardwareMap.crservo.get("beacon_poker");
         CDI = hardwareMap.deviceInterfaceModule.get("Device Interface Module 1");
-        //sensorGyro = hardwareMap.gyroSensor.get("gyro");
-        //mrGyro = (ModernRoboticsI2cGyro) sensorGyro; //allows us to get .getIntegratedZValue()
         //set correct color sensor I2cAddress names
         colorSensor = hardwareMap.colorSensor.get("color");
         colorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
@@ -58,12 +56,13 @@ public class colorsensortest extends LinearOpMode {
         waitForStart();
 
         findWhite();
-        driveForwardDistance(0.15, -12);
+        driveForwardDistance(0.15, -14);
         sleep(250);
         findHighColor();
-        driveForwardDistance(0.3, -80);
+        driveForwardDistance(0.15, -40);
+        sleep(250);
         findWhiteBackwards();
-        driveForwardDistance(0.15, -12);
+        driveForwardDistance(0.15, -7);
         findHighColor();
         stopDriving();
 
@@ -215,7 +214,7 @@ public class colorsensortest extends LinearOpMode {
             telemetry.addData("Left side of beacon is","BLUE");
             telemetry.update();
 
-            driveForwardDistance(slowSpeed, -13);
+            driveForwardDistance(slowSpeed, -12);
             pokeBeacon();
         }
 

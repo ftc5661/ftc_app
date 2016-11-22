@@ -18,8 +18,8 @@ public class Drive5661 extends OpMode {
     DcMotor motorDriveRight;
     DcMotor motorDriveLeft;
     DcMotor motorBallCollect;
-    //DcMotor motorCapBallLeft;
-    //DcMotor motorCapBallRight;
+    DcMotor motorCapBallLeft;
+    DcMotor motorCapBallRight;
     DcMotor motorShootBall;
     Servo servoGateLeft;
     Servo servoGateRight;
@@ -28,15 +28,14 @@ public class Drive5661 extends OpMode {
     int servoGatePositionRight;
     int servoPokerPower;
 
-
     @Override
     public void init() {
         //set java names to hardware map names
         motorDriveLeft = hardwareMap.dcMotor.get("left_motor");
         motorDriveRight = hardwareMap.dcMotor.get("right_motor");
         motorBallCollect = hardwareMap.dcMotor.get("collect_motor");
-        //motorCapBallLeft = hardwareMap.dcMotor.get("cap_ball_left");
-        //motorCapBallRight = hardwareMap.dcMotor.get("cap_ball_right");
+        motorCapBallLeft = hardwareMap.dcMotor.get("cap_ball_left");
+        motorCapBallRight = hardwareMap.dcMotor.get("cap_ball_right");
         motorShootBall = hardwareMap.dcMotor.get("shoot_ball");
         servoGateLeft = hardwareMap.servo.get("left_servo");
         servoGateRight = hardwareMap.servo.get("right_servo");
@@ -44,7 +43,7 @@ public class Drive5661 extends OpMode {
         //reverse right motor to drive
         motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
         //reverse right cap ball motor
-        //motorCapBallRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorCapBallRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         servoGatePositionLeft = 1;
         servoGatePositionRight = 0;
@@ -77,7 +76,7 @@ public class Drive5661 extends OpMode {
         motorDriveRight.setPower(rightStick);
         motorDriveLeft.setPower(leftStick);
 
-        /*
+        //right and left bumper controls lift motors
         if (gamepad1.right_bumper){
             //lifts cap ball
             motorCapBallLeft.setPower(1);
@@ -93,7 +92,6 @@ public class Drive5661 extends OpMode {
             motorCapBallLeft.setPower(0);
             motorCapBallRight.setPower(0);
         }
-        */
 
                                     //GAMEPAD 2
 
@@ -133,7 +131,6 @@ public class Drive5661 extends OpMode {
             motorShootBall.setPower(0);
         }
 
-
         //if x is pressed pokes beacons, if y is pressed beacon poker retracts
         if (gamepad2.x){
             servoPokerPower = 1;
@@ -151,8 +148,9 @@ public class Drive5661 extends OpMode {
         telemetry.addData("Controller", "One");
         telemetry.addData("Left Stick", leftStick);
         telemetry.addData("Right Stick", rightStick);
-        //telemetry.addData("Cap Ball Left Motor Speed", motorCapBallLeft.getPower());
-        //telemetry.addData("Cap Ball Right Motor Speed", motorCapBallRight.getPower());
+        telemetry.addData("Cap Ball Left Motor Speed", motorCapBallLeft.getPower());
+        telemetry.addData("Cap Ball Right Motor Speed", motorCapBallRight.getPower());
+        telemetry.addLine();
         telemetry.addData("Controller", "Two");
         telemetry.addData("Left Servo Position", servoGatePositionLeft);
         telemetry.addData("Right Servo Position", servoGatePositionRight);
@@ -160,6 +158,5 @@ public class Drive5661 extends OpMode {
         telemetry.addData("Shoot Ball Motor Speed", motorShootBall.getPower());
         telemetry.addData("Beacon Poker Status", servoPokerPower);
         telemetry.update();
-
     }
 }
