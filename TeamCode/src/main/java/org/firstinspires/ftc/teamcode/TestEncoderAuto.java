@@ -45,10 +45,10 @@ public class TestEncoderAuto extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         //connects motors, servos, and other electronics code names to config file names
-        motorLeft = hardwareMap.dcMotor.get("right_motor");
-        motorRight = hardwareMap.dcMotor.get("left_motor");
+        motorRight = hardwareMap.dcMotor.get("right_motor");
+        motorLeft = hardwareMap.dcMotor.get("left_motor");
         //reverse right motor to drive correctly
-        motorRight.setDirection(DcMotor.Direction.REVERSE);
+        motorLeft.setDirection(DcMotor.Direction.REVERSE);
         beaconPoker = hardwareMap.crservo.get("beacon_poker");
         CDI = hardwareMap.deviceInterfaceModule.get("Device Interface Module 1");
         //sensorGyro = hardwareMap.gyroSensor.get("gyro");

@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
  * Created by 5661 on 11/21/2016.
  * color test for red side
  */
-@Autonomous(name = "color test red side", group = "Autonomous OpMode")
-public class colorsensortest extends LinearOpMode {
+@Autonomous(name = "color test blue side", group = "Autonomous OpMode")
+public class colorsensortest2 extends LinearOpMode {
 
     DcMotor motorRight;
     DcMotor motorLeft;
@@ -39,7 +39,7 @@ public class colorsensortest extends LinearOpMode {
         motorRight = hardwareMap.dcMotor.get("right_motor");
         motorLeft = hardwareMap.dcMotor.get("left_motor");
         //reverse right motor to drive correctly
-        motorRight.setDirection(DcMotor.Direction.REVERSE);
+        motorLeft.setDirection(DcMotor.Direction.REVERSE);
         beaconPoker = hardwareMap.crservo.get("beacon_poker");
         CDI = hardwareMap.deviceInterfaceModule.get("Device Interface Module 1");
         //set correct color sensor I2cAddress names
@@ -92,7 +92,7 @@ public class colorsensortest extends LinearOpMode {
             idle();
         }
 
-       // stopDriving();
+        // stopDriving();
 
         /*
         //while color sensor goes too far
