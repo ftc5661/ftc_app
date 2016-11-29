@@ -10,7 +10,9 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 
 /**
  * Created by 5661 on 11/21/2016.
+ *
  * color test for red side
+ *
  */
 @Autonomous(name = "color test blue side", group = "Autonomous OpMode")
 public class colorsensortest2 extends LinearOpMode {
@@ -57,13 +59,13 @@ public class colorsensortest2 extends LinearOpMode {
         waitForStart();
 
         findWhite();
-        driveForwardDistance(0.15, -12);
+        driveForwardDistance(0.15, 6);
         sleep(250);
         findHighColor();
         driveForwardDistance(0.15, -40);
         sleep(250);
         findWhiteBackwards();
-        driveForwardDistance(0.15, -6);
+        driveForwardDistance(0.15, 12);
         findHighColorBackwards();
         stopDriving();
 
@@ -121,7 +123,6 @@ public class colorsensortest2 extends LinearOpMode {
         turnOffLEDs();
         modeRunUsingEncoder();
     }
-
     public void driveForwardDistance(double power, int distance) throws InterruptedException {
         //DriveForwardDistance is used to move the robot forward a specific distance
 
@@ -145,7 +146,6 @@ public class colorsensortest2 extends LinearOpMode {
         stopDriving();
         modeRunUsingEncoder();
     }
-
     public void findHighColor() throws InterruptedException {
 
         modeRunWithoutEncoders();
@@ -164,7 +164,7 @@ public class colorsensortest2 extends LinearOpMode {
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
-            driveForward(slowSpeed);
+            driveForward(-slowSpeed);
             idle();
         }
 
@@ -182,7 +182,7 @@ public class colorsensortest2 extends LinearOpMode {
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
-            driveForward(slowSpeed);
+            driveForward(-slowSpeed);
             idle();
         }
 
@@ -200,9 +200,10 @@ public class colorsensortest2 extends LinearOpMode {
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
             //notifies driver of beacon status
-            telemetry.addData("Left side of beacon is","RED");
+            telemetry.addData("Right side of beacon is","RED");
             telemetry.update();
 
+            driveForwardDistance(slowSpeed, 11);
             pokeBeacon();
 
         } else if (highColorSensor.red() < highColorSensor.blue()){
@@ -217,14 +218,11 @@ public class colorsensortest2 extends LinearOpMode {
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
             //notifies driver of beacon status
-            telemetry.addData("Left side of beacon is","BLUE");
+            telemetry.addData("Right side of beacon is","BLUE");
             telemetry.update();
 
-            driveForwardDistance(slowSpeed, -11);
             pokeBeacon();
         }
-
-
 
         //stops robot and turns off LEDs
         turnOffLEDs();
@@ -233,7 +231,6 @@ public class colorsensortest2 extends LinearOpMode {
         stopDriving();
         modeRunUsingEncoder();
     }
-
     public void findHighColorBackwards() throws InterruptedException {
 
         modeRunWithoutEncoders();
@@ -252,7 +249,7 @@ public class colorsensortest2 extends LinearOpMode {
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
-            driveForward(-slowSpeed);
+            driveForward(slowSpeed);
             idle();
         }
 
@@ -270,7 +267,7 @@ public class colorsensortest2 extends LinearOpMode {
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
-            driveForward(-slowSpeed);
+            driveForward(slowSpeed);
             idle();
         }
 
@@ -288,9 +285,10 @@ public class colorsensortest2 extends LinearOpMode {
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
             //notifies driver of beacon status
-            telemetry.addData("Left side of beacon is","RED");
+            telemetry.addData("Right side of beacon is","RED");
             telemetry.update();
 
+            driveForwardDistance(slowSpeed, 11);
             pokeBeacon();
 
         } else if (highColorSensor.red() < highColorSensor.blue()){
@@ -305,14 +303,11 @@ public class colorsensortest2 extends LinearOpMode {
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
             //notifies driver of beacon status
-            telemetry.addData("Left side of beacon is","BLUE");
+            telemetry.addData("Right side of beacon is","BLUE");
             telemetry.update();
 
-            driveForwardDistance(slowSpeed, -11);
             pokeBeacon();
         }
-
-
 
         //stops robot and turns off LEDs
         turnOffLEDs();
@@ -321,7 +316,6 @@ public class colorsensortest2 extends LinearOpMode {
         stopDriving();
         modeRunUsingEncoder();
     }
-
     public void pokeBeacon(){
         //Moves CRServo to hit beacon and move back
         beaconPoker.setPower(CRServoForward);
@@ -331,7 +325,6 @@ public class colorsensortest2 extends LinearOpMode {
         beaconPoker.setPower(CRServoStop);
         sleep(50);
     }
-
     public void findWhite() throws InterruptedException{
 
         //notifies driver robot is moving to find white

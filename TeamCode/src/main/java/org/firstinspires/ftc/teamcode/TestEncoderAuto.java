@@ -13,7 +13,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by 5661 on 9/21/2016.
+ *
  * Full Autonomous program for the 5661 programming robot on the blue side
+ *
  */
 @Autonomous(name = "Autonomous Blue Side", group = "Autonomous OpMode")
 public class TestEncoderAuto extends LinearOpMode{
@@ -24,12 +26,10 @@ public class TestEncoderAuto extends LinearOpMode{
     ColorSensor colorSensor;
     ColorSensor highColorSensor;
     DeviceInterfaceModule CDI;
-    //GyroSensor sensorGyro;
-    //ModernRoboticsI2cGyro mrGyro;
     //value when robot color sensor is centered on white
-    int maxFindWhite = 2;
+    int maxFindWhite = 3;
     //value when robot color sensor is half-way on white
-    int minFindWhite = 1;
+    int minFindWhite = 2;
     //NOTE: For AndyMark NeveRest motors, 1120 is one revolution, which is 9.42inches/23.9268cm in distance
     int encoderTicks = 1120;
     double wheelCircumference = 23.9268;
@@ -39,8 +39,7 @@ public class TestEncoderAuto extends LinearOpMode{
     double CRServoStop = 0;
     double CRServoForward = 1;
     double CRServoBackward = -1;
-    int turnRight = -1;
-    int turnLeft = 1;
+    double slowSpeed = 0.13;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -51,8 +50,6 @@ public class TestEncoderAuto extends LinearOpMode{
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
         beaconPoker = hardwareMap.crservo.get("beacon_poker");
         CDI = hardwareMap.deviceInterfaceModule.get("Device Interface Module 1");
-        //sensorGyro = hardwareMap.gyroSensor.get("gyro");
-        //mrGyro = (ModernRoboticsI2cGyro) sensorGyro; //allows us to get .getIntegratedZValue()
         //set correct color sensor I2cAddress names
         colorSensor = hardwareMap.colorSensor.get("color");
         colorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
@@ -65,24 +62,6 @@ public class TestEncoderAuto extends LinearOpMode{
         //sets start position of servos
         beaconPoker.setPower(CRServoStop);
 
-        // start calibrating the gyro.
-        //mrGyro.calibrate();
-        //sleep(50);
-        //idle();
-        // DO NOT MOVE SENSOR WHILE BLUE LIGHT IS SOLID
-
-        /*
-        while (!isStopRequested() && mrGyro.isCalibrating()){
-            //Ensure calibration is complete (usually 2 seconds)
-            telemetry.addData(">", "Gyro Calibrating. Do Not move!");
-            telemetry.update();
-            sleep(50);
-        }
-
-        telemetry.addData(">", "Gyro Calibrated.  Press Start.");
-        telemetry.update();
-        */
-
         //wait for the game to start(press the play button)
         waitForStart();
 
@@ -90,21 +69,25 @@ public class TestEncoderAuto extends LinearOpMode{
          *          AUTONOMOUS MOVEMENTS BEGIN HERE
          */
 
-        driveForwardDistance(0.7, 70); //speed then distance
-        turnRightDistance(0.15, 15);
-        //turnAbsoluteGyro(48, turnRight);
-        driveForwardDistance(0.7, 80);
-        turnLeftDistance(0.15, 12);
-        //turnGyro(35, turnLeft);
-        driveForwardDistance(0.3, 25);
-        turnLeftDistance(0.15, 6);
-        //turnGyro(14, turnLeft);
-        driveForwardDistance(0.2, 30);
+        driveForwardDistance(0.5, 50);//speed then distance
+        sleep(200);
+        turnRightDistance(0.2, 17);
+        sleep(200);
+        driveForwardDistance(0.5, 110);
+        sleep(200);
+        turnLeftDistance(0.2, 16);
+        sleep(200);
+        driveForwardDistance(0.4, 50);
+        sleep(200);
         findWhite();
+        driveForwardDistance(0.15, 6);
+        sleep(250);
         findHighColor();
-        driveForwardDistance(0.3, -80);
+        driveForwardDistance(0.15, -40);
+        sleep(250);
         findWhiteBackwards();
-        findHighColor();
+        driveForwardDistance(0.15, 12);
+        findHighColorBackwards();
         stopDriving();
 
         /*
@@ -141,34 +124,8 @@ public class TestEncoderAuto extends LinearOpMode{
         stopDriving();
         modeRunUsingEncoder();
     }
-
     public void turnLeftDistance(double power, int distance) throws InterruptedException {
         //TurnLeftDistance  is used to turn the robot left a specific distance
-
-        modeResetEncoders();
-
-        //distance in cm divided by the wheel circumference times motor encoder ticks
-        double distanceSet = ((distance/(wheelCircumference))* encoderTicks);
-        //set target position
-        motorLeft.setTargetPosition ((int)-distanceSet);
-        motorRight.setTargetPosition ((int)distanceSet);
-
-        modeRunToPosition();
-
-        driveForward(power);
-
-        sleep(50);
-
-        while(!isStopRequested() && motorLeft.isBusy() && motorRight.isBusy()){
-            //wait until target position is reached
-        }
-
-        //stop and change modes back to normal
-        stopDriving();
-        modeRunUsingEncoder();
-    }
-    public void turnRightDistance(double power, int distance) throws InterruptedException {
-        //TurnRightDistance is used to turn the robot right a specific distance
 
         modeResetEncoders();
 
@@ -192,7 +149,31 @@ public class TestEncoderAuto extends LinearOpMode{
         stopDriving();
         modeRunUsingEncoder();
     }
+    public void turnRightDistance(double power, int distance) throws InterruptedException {
+        //TurnRightDistance is used to turn the robot right a specific distance
 
+        modeResetEncoders();
+
+        //distance in cm divided by the wheel circumference times motor encoder ticks
+        double distanceSet = ((distance/(wheelCircumference))* encoderTicks);
+        //set target position
+        motorLeft.setTargetPosition ((int)-distanceSet);
+        motorRight.setTargetPosition ((int)distanceSet);
+
+        modeRunToPosition();
+
+        driveForward(power);
+
+        sleep(50);
+
+        while(!isStopRequested() && motorLeft.isBusy() && motorRight.isBusy()){
+            //wait until target position is reached
+        }
+
+        //stop and change modes back to normal
+        stopDriving();
+        modeRunUsingEncoder();
+    }
     public void driveForward(double power){
         //sets the motor speed to 'power'
         motorLeft.setPower(power);
@@ -223,52 +204,6 @@ public class TestEncoderAuto extends LinearOpMode{
         motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-    /*
-    public void turnAbsoluteGyro(int target, int direction){
-        //turnAbsoluteGyro turns robot from initial calibration, you have to know how much to turn according from your starting point
-        telemetry.addData(">", "Turning robot using gyro");
-        telemetry.update();
-
-        int fixedTarget = 0;
-
-        if (direction < 0 ){
-            //turn right
-            fixedTarget = -target;
-        } else if (direction > 0){
-            //turn left
-            fixedTarget = target;
-        }
-
-        while(!isStopRequested() && Math.abs(mrGyro.getIntegratedZValue() - fixedTarget) > 3){
-
-            if (mrGyro.getIntegratedZValue() > fixedTarget){ //if gyro is positive,  the robot will turn right
-                telemetry.addData(">", "Robot is currently turning right");
-                telemetry.addData("IntegratedZValue", mrGyro.getIntegratedZValue());
-                telemetry.update();
-
-                motorLeft.setPower(0.1);
-                motorRight.setPower(-0.1);
-            }
-
-            if (mrGyro.getIntegratedZValue() < fixedTarget){ //if gyro is negative, the robot will turn left
-                telemetry.addData(">", "Robot is currently turning left");
-                telemetry.addData("IntegratedZValue", mrGyro.getIntegratedZValue());
-                telemetry.update();
-
-                motorLeft.setPower(-0.1);
-                motorRight.setPower(0.1);
-            }
-            idle();
-        }
-        //stops motors
-        motorLeft.setPower(0);
-        motorRight.setPower(0);
-    }
-    public void turnGyro(int target, int direction){ //counter-clockwise
-        //turnGyro turns robot from current position. careful when using this method, small errors in movement can add up!
-        turnAbsoluteGyro(target + mrGyro.getIntegratedZValue(), direction);
-    }
-    */
     public void findWhite() throws InterruptedException{
 
         //notifies driver robot is moving to find white
@@ -278,11 +213,12 @@ public class TestEncoderAuto extends LinearOpMode{
         modeRunWithoutEncoders();
 
         //while color sensor see no white
-        while(!isStopRequested() && colorSensor.alpha() < maxFindWhite){
+        while(colorSensor.alpha() < maxFindWhite){
             //Turn on LED
             colorSensor.enableLed(true);
 
             //notify driver robot's current color value
+            telemetry.addData(">", "Moving to find white...");
             telemetry.addData("Color Sensor", colorSensor.alpha());
             telemetry.update();
 
@@ -291,9 +227,10 @@ public class TestEncoderAuto extends LinearOpMode{
             idle();
         }
 
-        stopDriving();
+        //stopDriving();
 
         //while color sensor goes too far
+        /*
         while(!isStopRequested() && colorSensor.alpha() < maxFindWhite){
             //Turn on LED
             colorSensor.enableLed(true);
@@ -306,10 +243,13 @@ public class TestEncoderAuto extends LinearOpMode{
             driveForward(-0.15);
             idle();
         }
+        */
 
+        /*
         if(colorSensor.alpha() > minFindWhite){
             stopDriving();
         }
+        */
 
         //stops robot
         stopDriving();
@@ -325,21 +265,23 @@ public class TestEncoderAuto extends LinearOpMode{
         modeRunWithoutEncoders();
 
         //while color sensor see no white
-        while(!isStopRequested() && colorSensor.alpha() < maxFindWhite){
+        while(colorSensor.alpha() < maxFindWhite){
             //Turn on LED
             colorSensor.enableLed(true);
 
             //notify driver robot's current color value
+            telemetry.addData(">", "Moving backwards to find white...");
             telemetry.addData("Color Sensor", colorSensor.alpha());
             telemetry.update();
 
             //move robot to find white line
-            driveForward(-0.15);
+            driveForward(-slowSpeed);
             idle();
         }
 
-        stopDriving();
+        // stopDriving();
 
+        /*
         //while color sensor goes too far
         while(!isStopRequested() && colorSensor.alpha() < maxFindWhite){
             //Turn on LED
@@ -350,13 +292,16 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.update();
 
             //move robot slowly backwards to find white line
-            driveForward(0.15);
+            driveForward(slowSpeed);
             idle();
         }
+        */
 
+        /*
         if(colorSensor.alpha() > minFindWhite){
             stopDriving();
         }
+        */
 
         //stops robot
         stopDriving();
@@ -381,7 +326,7 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
-            driveForward(-0.15);
+            driveForward(-slowSpeed);
             idle();
         }
 
@@ -399,7 +344,7 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
-            driveForward(-0.15);
+            driveForward(-slowSpeed);
             idle();
         }
 
@@ -417,9 +362,10 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
             //notifies driver of beacon status
-            telemetry.addData("Left side of beacon is","RED");
+            telemetry.addData("Right side of beacon is","RED");
             telemetry.update();
 
+            driveForwardDistance(slowSpeed, 11);
             pokeBeacon();
 
         } else if (highColorSensor.red() < highColorSensor.blue()){
@@ -434,10 +380,94 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData("Red", highColorSensor.red());
             telemetry.addData("Blue", highColorSensor.blue());
             //notifies driver of beacon status
-            telemetry.addData("Left side of beacon is","BLUE");
+            telemetry.addData("Right side of beacon is","BLUE");
             telemetry.update();
 
-            driveForwardDistance(0.15, 13);
+            pokeBeacon();
+        }
+
+        //stops robot and turns off LEDs
+        turnOffLEDs();
+        CDI.setLED(0, false);       //Blue OFF
+        CDI.setLED(1, false);       //Red OFF
+        stopDriving();
+        modeRunUsingEncoder();
+    }
+    public void findHighColorBackwards() throws InterruptedException {
+
+        modeRunWithoutEncoders();
+
+        while(!isStopRequested() && highColorSensor.red() == 0 && highColorSensor.blue() == 0){
+            //while highColorSensor cannot read any color values, it moves the robot back
+
+            CDI.setLED(0, false);       //Blue OFF
+            CDI.setLED(1, false);       //Red OFF
+
+            //notify driver robot's current color value
+            telemetry.addData("Red", highColorSensor.red());
+            telemetry.addData("Blue", highColorSensor.blue());
+            //notifies driver of error status
+            telemetry.addData("ERROR","sensor cannot find color values");
+            telemetry.addData(">", "Moving backwards...");
+            telemetry.update();
+            //error, equal color value, moving back
+            driveForward(slowSpeed);
+            idle();
+        }
+
+        while(!isStopRequested() && highColorSensor.red() == highColorSensor.blue()){
+            //highColorSensor reads red and blue as equal values
+
+            CDI.setLED(0, true);       //Blue ON
+            CDI.setLED(1, true);       //Red ON
+
+            //notify driver robot's current color value
+            telemetry.addData("Red", highColorSensor.red());
+            telemetry.addData("Blue", highColorSensor.blue());
+            //notifies driver of error status
+            telemetry.addData("ERROR","colors are equal value");
+            telemetry.addData(">", "Moving backwards...");
+            telemetry.update();
+            //error, equal color value, moving back
+            driveForward(slowSpeed);
+            idle();
+        }
+
+        stopDriving();
+
+        if (highColorSensor.red() > highColorSensor.blue()){
+            //Right side of beacon is red
+
+            stopDriving();
+
+            CDI.setLED(0, false);       //Blue OFF
+            CDI.setLED(1, true);        //Red ON
+
+            //notify driver robot's current color value
+            telemetry.addData("Red", highColorSensor.red());
+            telemetry.addData("Blue", highColorSensor.blue());
+            //notifies driver of beacon status
+            telemetry.addData("Right side of beacon is","RED");
+            telemetry.update();
+
+            driveForwardDistance(slowSpeed, 11);
+            pokeBeacon();
+
+        } else if (highColorSensor.red() < highColorSensor.blue()){
+            //Right side of beacon is blue
+
+            stopDriving();
+
+            CDI.setLED(0, true);        //Blue ON
+            CDI.setLED(1, false);       //Red OFF
+
+            //notify driver robot's current color value
+            telemetry.addData("Red", highColorSensor.red());
+            telemetry.addData("Blue", highColorSensor.blue());
+            //notifies driver of beacon status
+            telemetry.addData("Right side of beacon is","BLUE");
+            telemetry.update();
+
             pokeBeacon();
         }
 
@@ -456,7 +486,7 @@ public class TestEncoderAuto extends LinearOpMode{
     public void pokeBeacon(){
         //Moves CRServo to hit beacon and move back
         beaconPoker.setPower(CRServoForward);
-        sleep(2500);
+        sleep(2000);
         beaconPoker.setPower(CRServoBackward);
         sleep(1500);
         beaconPoker.setPower(CRServoStop);

@@ -12,7 +12,9 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 
 /**
  * Created by 5661 on 11/10/2016.
+ *
  * Full Autonomous program for the 5661 programming robot on the red side
+ *
  */
 @Autonomous(name = "Autonomous Red Side", group = "Autonomous OpMode")
 public class TestEncoderAuto2 extends LinearOpMode {
@@ -23,8 +25,6 @@ public class TestEncoderAuto2 extends LinearOpMode {
     ColorSensor colorSensor;
     ColorSensor highColorSensor;
     DeviceInterfaceModule CDI;
-    //GyroSensor sensorGyro;
-    //ModernRoboticsI2cGyro mrGyro;
     //value when robot color sensor is centered on white
     int maxFindWhite = 3;
     //value when robot color sensor is half-way on white
@@ -38,8 +38,6 @@ public class TestEncoderAuto2 extends LinearOpMode {
     double CRServoStop = 0;
     double CRServoForward = 1;
     double CRServoBackward = -1;
-    //int turnRight = -1;
-    //int turnLeft = 1;
     double slowSpeed = 0.13;
 
     @Override
@@ -51,8 +49,6 @@ public class TestEncoderAuto2 extends LinearOpMode {
         motorRight.setDirection(DcMotor.Direction.REVERSE);
         beaconPoker = hardwareMap.crservo.get("beacon_poker");
         CDI = hardwareMap.deviceInterfaceModule.get("Device Interface Module 1");
-        //sensorGyro = hardwareMap.gyroSensor.get("gyro");
-        //mrGyro = (ModernRoboticsI2cGyro) sensorGyro; //allows us to get .getIntegratedZValue()
         //set correct color sensor I2cAddress names
         colorSensor = hardwareMap.colorSensor.get("color");
         colorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
@@ -65,24 +61,6 @@ public class TestEncoderAuto2 extends LinearOpMode {
         //sets start position of servos
         beaconPoker.setPower(CRServoStop);
 
-        // start calibrating the gyro.
-        //mrGyro.calibrate();
-        //sleep(50);
-        //idle();
-        // DO NOT MOVE SENSOR WHILE BLUE LIGHT IS SOLID
-
-        /*
-        while (!isStopRequested() && mrGyro.isCalibrating()){
-            //Ensure calibration is complete (usually 2 seconds)
-            telemetry.addData(">", "Gyro Calibrating. Do Not move!");
-            telemetry.update();
-            sleep(50);
-        }
-
-        telemetry.addData(">", "Gyro Calibrated.  Press Start.");
-        telemetry.update();
-        */
-
         //wait for the game to start(press the play button)
         waitForStart();
 
@@ -91,26 +69,23 @@ public class TestEncoderAuto2 extends LinearOpMode {
          */
 
         driveForwardDistance(0.6, 50); //speed then distance
-        sleep(250);
+        sleep(200);
         turnLeftDistance(0.2, 12);
         sleep(200);
-        //turnAbsoluteGyro(48, turnRight);
         driveForwardDistance(0.6, 80);
-        sleep(250);
+        sleep(200);
         turnRightDistance(0.2, 6);
-        sleep(250);
-        //turnGyro(35, turnLeft);
+        sleep(200);
         driveForwardDistance(0.3, 45);
-        sleep(250);
+        sleep(200);
         turnRightDistance(0.2, 8);
         sleep(200);
-        //turnGyro(14, turnLeft);
         findWhite();
         driveForwardDistance(0.15, -12);
-        sleep(250);
+        sleep(200);
         findHighColor();
         driveForwardDistance(0.15, -40);
-        sleep(250);
+        sleep(200);
         findWhiteBackwards();
         driveForwardDistance(0.15, -6);
         findHighColorBackwards();
@@ -149,7 +124,6 @@ public class TestEncoderAuto2 extends LinearOpMode {
         stopDriving();
         modeRunUsingEncoder();
     }
-
     public void turnLeftDistance(double power, int distance) throws InterruptedException {
         //TurnLeftDistance  is used to turn the robot left a specific distance
 
@@ -200,7 +174,6 @@ public class TestEncoderAuto2 extends LinearOpMode {
         stopDriving();
         modeRunUsingEncoder();
     }
-
     public void driveForward(double power){
         //sets the motor speed to 'power'
         motorLeft.setPower(power);
@@ -231,52 +204,6 @@ public class TestEncoderAuto2 extends LinearOpMode {
         motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-    /*
-    public void turnAbsoluteGyro(int target, int direction){
-        //turnAbsoluteGyro turns robot from initial calibration, you have to know how much to turn according from your starting point
-        telemetry.addData(">", "Turning robot using gyro");
-        telemetry.update();
-
-        int fixedTarget = 0;
-
-        if (direction < 0 ){
-            //turn right
-            fixedTarget = -target;
-        } else if (direction > 0){
-            //turn left
-            fixedTarget = target;
-        }
-
-        while(!isStopRequested() && Math.abs(mrGyro.getIntegratedZValue() - fixedTarget) > 3){
-
-            if (mrGyro.getIntegratedZValue() > fixedTarget){ //if gyro is positive,  the robot will turn right
-                telemetry.addData(">", "Robot is currently turning right");
-                telemetry.addData("IntegratedZValue", mrGyro.getIntegratedZValue());
-                telemetry.update();
-
-                motorLeft.setPower(0.1);
-                motorRight.setPower(-0.1);
-            }
-
-            if (mrGyro.getIntegratedZValue() < fixedTarget){ //if gyro is negative, the robot will turn left
-                telemetry.addData(">", "Robot is currently turning left");
-                telemetry.addData("IntegratedZValue", mrGyro.getIntegratedZValue());
-                telemetry.update();
-
-                motorLeft.setPower(-0.1);
-                motorRight.setPower(0.1);
-            }
-            idle();
-        }
-        //stops motors
-        motorLeft.setPower(0);
-        motorRight.setPower(0);
-    }
-    public void turnGyro(int target, int direction){ //counter-clockwise
-        //turnGyro turns robot from current position. careful when using this method, small errors in movement can add up!
-        turnAbsoluteGyro(target + mrGyro.getIntegratedZValue(), direction);
-    }
-    */
     public void findWhite() throws InterruptedException{
 
         //notifies driver robot is moving to find white
@@ -459,8 +386,6 @@ public class TestEncoderAuto2 extends LinearOpMode {
             pokeBeacon();
         }
 
-
-
         //stops robot and turns off LEDs
         turnOffLEDs();
         CDI.setLED(0, false);       //Blue OFF
@@ -545,8 +470,6 @@ public class TestEncoderAuto2 extends LinearOpMode {
             driveForwardDistance(slowSpeed, -11);
             pokeBeacon();
         }
-
-
 
         //stops robot and turns off LEDs
         turnOffLEDs();
