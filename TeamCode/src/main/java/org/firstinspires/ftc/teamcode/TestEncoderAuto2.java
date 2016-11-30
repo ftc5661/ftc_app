@@ -39,6 +39,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
     double CRServoForward = 1;
     double CRServoBackward = -1;
     double slowSpeed = 0.13;
+    int shortSleep = 200;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -68,26 +69,19 @@ public class TestEncoderAuto2 extends LinearOpMode {
          *          AUTONOMOUS MOVEMENTS BEGIN HERE
          */
 
-        driveForwardDistance(0.6, 50); //speed then distance
-        sleep(200);
-        turnLeftDistance(0.2, 12);
-        sleep(200);
-        driveForwardDistance(0.6, 80);
-        sleep(200);
-        turnRightDistance(0.2, 6);
-        sleep(200);
-        driveForwardDistance(0.3, 45);
-        sleep(200);
-        turnRightDistance(0.2, 8);
-        sleep(200);
+        //speed %, distance in cm, then sleep time after movement stops
+        driveForwardDistance(0.6, 50, shortSleep);
+        turnLeftDistance(0.2, 12, shortSleep);
+        driveForwardDistance(0.6, 80, shortSleep);
+        turnRightDistance(0.2, 6, shortSleep);
+        driveForwardDistance(0.3, 45, shortSleep);
+        turnRightDistance(0.2, 8, shortSleep);
         findWhite();
-        driveForwardDistance(0.15, -12);
-        sleep(200);
+        driveForwardDistance(0.15, -12, shortSleep);
         findHighColor();
-        driveForwardDistance(0.15, -40);
-        sleep(200);
+        driveForwardDistance(0.15, -40, shortSleep);
         findWhiteBackwards();
-        driveForwardDistance(0.15, -6);
+        driveForwardDistance(0.15, -6, shortSleep);
         findHighColorBackwards();
         stopDriving();
 
@@ -101,7 +95,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
         telemetry.update();
         sleep(500);
     }
-    public void driveForwardDistance(double power, int distance) throws InterruptedException {
+    public void driveForwardDistance(double power, int distance, int sleepTime) throws InterruptedException {
         //DriveForwardDistance is used to move the robot forward a specific distance
 
         modeResetEncoders();
@@ -123,8 +117,9 @@ public class TestEncoderAuto2 extends LinearOpMode {
         //stop and change modes back to normal
         stopDriving();
         modeRunUsingEncoder();
+        sleep(sleepTime);
     }
-    public void turnLeftDistance(double power, int distance) throws InterruptedException {
+    public void turnLeftDistance(double power, int distance, int sleepTime) throws InterruptedException {
         //TurnLeftDistance  is used to turn the robot left a specific distance
 
         modeResetEncoders();
@@ -148,8 +143,9 @@ public class TestEncoderAuto2 extends LinearOpMode {
         //stop and change modes back to normal
         stopDriving();
         modeRunUsingEncoder();
+        sleep(sleepTime);
     }
-    public void turnRightDistance(double power, int distance) throws InterruptedException {
+    public void turnRightDistance(double power, int distance, int sleepTime) throws InterruptedException {
         //TurnRightDistance is used to turn the robot right a specific distance
 
         modeResetEncoders();
@@ -173,6 +169,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
         //stop and change modes back to normal
         stopDriving();
         modeRunUsingEncoder();
+        sleep(sleepTime);
     }
     public void driveForward(double power){
         //sets the motor speed to 'power'
@@ -382,7 +379,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
             telemetry.addData("Left side of beacon is","BLUE");
             telemetry.update();
 
-            driveForwardDistance(slowSpeed, -11);
+            driveForwardDistance(slowSpeed, -11, 0);
             pokeBeacon();
         }
 
@@ -467,7 +464,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
             telemetry.addData("Left side of beacon is","BLUE");
             telemetry.update();
 
-            driveForwardDistance(slowSpeed, -11);
+            driveForwardDistance(slowSpeed, -11, 0);
             pokeBeacon();
         }
 

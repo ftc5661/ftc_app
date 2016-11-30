@@ -26,8 +26,8 @@ public class Drive5661 extends OpMode {
     Servo servoGateLeft;
     Servo servoGateRight;
     CRServo beaconPoker;
-    int servoGatePositionLeft;
-    int servoGatePositionRight;
+    double servoGatePositionLeft;
+    double servoGatePositionRight;
     int servoPokerPower;
 
     @Override
@@ -112,10 +112,10 @@ public class Drive5661 extends OpMode {
 
         //if right bumper is pressed, motor collects ball into robot
         if (gamepad2.right_bumper){
-            motorBallCollect.setPower(-0.9);
+            motorBallCollect.setPower(-1);
         }
         if (gamepad2.left_bumper){
-            motorBallCollect.setPower(0.9);
+            motorBallCollect.setPower(1);
         }
         if (!gamepad2.right_bumper && !gamepad2.left_bumper){
             motorBallCollect.setPower(0);

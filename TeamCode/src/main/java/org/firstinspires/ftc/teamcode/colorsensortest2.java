@@ -60,10 +60,10 @@ public class colorsensortest2 extends LinearOpMode {
 
         findWhite();
         driveForwardDistance(0.15, 6);
-        sleep(250);
+        sleep(200);
         findHighColor();
         driveForwardDistance(0.15, -40);
-        sleep(250);
+        sleep(200);
         findWhiteBackwards();
         driveForwardDistance(0.15, 12);
         findHighColorBackwards();
