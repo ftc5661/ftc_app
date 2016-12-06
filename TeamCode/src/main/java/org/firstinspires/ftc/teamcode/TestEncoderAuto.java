@@ -42,7 +42,7 @@ public class TestEncoderAuto extends LinearOpMode{
     double CRServoForward = 1;
     double CRServoBackward = -1;
     double slowSpeed = 0.13;
-    int shortSleep = 200;
+    int shortSleep = 100;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -89,17 +89,17 @@ public class TestEncoderAuto extends LinearOpMode{
          */
 
         //speed %, distance in cm, then sleep time after movement stops
-        driveForwardDistance(0.5, 50, shortSleep);
+        driveForwardDistance(0.6, 50, shortSleep);
         turnRightDistance(slowSpeed, 17, shortSleep);
         checkGyro(-60);
-        driveForwardDistance(0.5, 95, shortSleep);
-        turnLeftDistance(slowSpeed, 15, shortSleep);
+        driveForwardDistance(0.6, 95, shortSleep);
+        turnLeftDistance(slowSpeed, 16, shortSleep);
         checkGyro(-1);
-        driveForwardDistance(0.4, 50, shortSleep);
+        driveForwardDistance(0.3, 50, shortSleep);
         findWhite();
         driveForwardDistance(0.15, 6, shortSleep);
         findHighColor();
-        driveForwardDistance(0.2, -40, shortSleep);
+        driveForwardDistance(0.3, -60, shortSleep);
         findWhiteBackwards();
         driveForwardDistance(0.15, 12, shortSleep);
         findHighColorBackwards();
@@ -113,7 +113,6 @@ public class TestEncoderAuto extends LinearOpMode{
         //update telemetry logs
         telemetry.addData(">", "Path Complete");
         telemetry.update();
-        sleep(500);
         }
 
     public void driveForwardDistance(double power, int distance, int sleepTime) throws InterruptedException {
@@ -126,6 +125,8 @@ public class TestEncoderAuto extends LinearOpMode{
         //set target position
         motorLeft.setTargetPosition ((int)distanceSet);
         motorRight.setTargetPosition ((int)distanceSet);
+
+        sleep(50);
 
         modeRunToPosition();
 
@@ -151,11 +152,11 @@ public class TestEncoderAuto extends LinearOpMode{
         motorLeft.setTargetPosition ((int)distanceSet);
         motorRight.setTargetPosition ((int)-distanceSet);
 
+        sleep(50);
+
         modeRunToPosition();
 
         driveForward(power);
-
-        sleep(50);
 
         while(!isStopRequested() && motorLeft.isBusy() && motorRight.isBusy()){
             //wait until target position is reached
@@ -177,11 +178,11 @@ public class TestEncoderAuto extends LinearOpMode{
         motorLeft.setTargetPosition ((int)-distanceSet);
         motorRight.setTargetPosition ((int)distanceSet);
 
+        sleep(50);
+
         modeRunToPosition();
 
         driveForward(power);
-
-        sleep(50);
 
         while(!isStopRequested() && motorLeft.isBusy() && motorRight.isBusy()){
             //wait until target position is reached
@@ -344,7 +345,8 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
-            driveForwardDistance(0.15, -5, 250);
+            driveForward(-slowSpeed);
+            idle();
         }
 
         while(!isStopRequested() && highColorSensor.red() == highColorSensor.blue()){
@@ -361,7 +363,8 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
-            driveForwardDistance(0.15, -5, 250);
+            driveForward(-slowSpeed);
+            idle();
         }
 
         stopDriving();
@@ -427,7 +430,8 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
-            driveForwardDistance(0.15, -5, 250);
+            driveForward(-slowSpeed);
+            idle();
         }
 
         while(!isStopRequested() && highColorSensor.red() == highColorSensor.blue()){
@@ -444,7 +448,8 @@ public class TestEncoderAuto extends LinearOpMode{
             telemetry.addData(">", "Moving backwards...");
             telemetry.update();
             //error, equal color value, moving back
-            driveForwardDistance(0.15, -5, 250);
+            driveForward(-slowSpeed);
+            idle();
         }
 
         stopDriving();
@@ -502,7 +507,7 @@ public class TestEncoderAuto extends LinearOpMode{
         beaconPoker.setPower(CRServoForward);
         sleep(2500);
         beaconPoker.setPower(CRServoBackward);
-        sleep(2000);
+        sleep(1500);
         beaconPoker.setPower(CRServoStop);
         sleep(50);
     }
@@ -520,7 +525,7 @@ public class TestEncoderAuto extends LinearOpMode{
 
                 //motorLeft.setPower(0.12);
                 //motorRight.setPower(-0.12);
-                turnRightDistance(0.1, 1, 200);
+                turnRightDistance(0.1, 1, shortSleep);
                 idle();
             }
 
@@ -531,7 +536,7 @@ public class TestEncoderAuto extends LinearOpMode{
 
                 //motorLeft.setPower(-0.12);
                 //motorRight.setPower(0.12);
-                turnLeftDistance(0.1, 1, 200);
+                turnLeftDistance(0.1, 1, shortSleep);
                 idle();
             }
         }

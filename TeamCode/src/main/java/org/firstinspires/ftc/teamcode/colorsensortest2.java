@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -15,6 +16,7 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
  *
  */
 @Autonomous(name = "color test blue side", group = "Autonomous OpMode")
+@Disabled
 public class colorsensortest2 extends LinearOpMode {
 
     DcMotor motorRight;
