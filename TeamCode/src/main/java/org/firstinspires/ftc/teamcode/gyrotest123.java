@@ -17,8 +17,8 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Full Autonomous program for the 5661 programming robot on the blue side
  *
  */
-@Autonomous(name = "Autonomous Blue Side", group = "Autonomous OpMode")
-public class TestEncoderAuto extends LinearOpMode{
+@Autonomous(name = "gyro test", group = "Autonomous OpMode")
+public class gyrotest123 extends LinearOpMode{
     //declares motors, servos, and other electronics
     DcMotor motorRight;
     DcMotor motorLeft;
@@ -88,33 +88,17 @@ public class TestEncoderAuto extends LinearOpMode{
          *          AUTONOMOUS MOVEMENTS BEGIN HERE
          */
 
-        //speed %, distance in cm, then sleep time after movement stops
-        driveForwardDistance(0.5, 50, shortSleep);
-        turnRightDistance(slowSpeed, 17, shortSleep);
-        checkGyro(-60);
-        driveForwardDistance(0.5, 95, shortSleep);
-        turnLeftDistance(slowSpeed, 15, shortSleep);
-        checkGyro(-1);
-        driveForwardDistance(0.4, 50, shortSleep);
-        findWhite();
-        driveForwardDistance(0.15, 6, shortSleep);
-        findHighColor();
-        driveForwardDistance(0.2, -40, shortSleep);
-        findWhiteBackwards();
-        driveForwardDistance(0.15, 12, shortSleep);
-        findHighColorBackwards();
-        stopDriving();
+
+        while(true){
+            telemetry.addData("IntegratedZValue", mrGyro.getIntegratedZValue());
+            telemetry.update();
+        }
 
         /*
          *          AUTONOMOUS MOVEMENTS END HERE
          */
 
-        turnOffLEDs();
-        //update telemetry logs
-        telemetry.addData(">", "Path Complete");
-        telemetry.update();
-        sleep(500);
-        }
+    }
 
     public void driveForwardDistance(double power, int distance, int sleepTime) throws InterruptedException {
         //DriveForwardDistance is used to move the robot forward a specific distance
@@ -500,9 +484,9 @@ public class TestEncoderAuto extends LinearOpMode{
     public void pokeBeacon(){
         //Moves CRServo to hit beacon and move back
         beaconPoker.setPower(CRServoForward);
-        sleep(2500);
-        beaconPoker.setPower(CRServoBackward);
         sleep(2000);
+        beaconPoker.setPower(CRServoBackward);
+        sleep(1500);
         beaconPoker.setPower(CRServoStop);
         sleep(50);
     }
@@ -520,7 +504,7 @@ public class TestEncoderAuto extends LinearOpMode{
 
                 //motorLeft.setPower(0.12);
                 //motorRight.setPower(-0.12);
-                turnRightDistance(0.1, 1, 200);
+                turnRightDistance(0.1, 1, 250);
                 idle();
             }
 
@@ -531,7 +515,7 @@ public class TestEncoderAuto extends LinearOpMode{
 
                 //motorLeft.setPower(-0.12);
                 //motorRight.setPower(0.12);
-                turnLeftDistance(0.1, 1, 200);
+                turnLeftDistance(0.1, 1, 250);
                 idle();
             }
         }

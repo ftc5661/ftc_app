@@ -25,6 +25,8 @@ public class TestEncoderAuto2 extends LinearOpMode {
     ColorSensor colorSensor;
     ColorSensor highColorSensor;
     DeviceInterfaceModule CDI;
+    GyroSensor sensorGyro;
+    ModernRoboticsI2cGyro mrGyro;
     //value when robot color sensor is centered on white
     int maxFindWhite = 3;
     //value when robot color sensor is half-way on white
@@ -55,12 +57,28 @@ public class TestEncoderAuto2 extends LinearOpMode {
         colorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
         highColorSensor = hardwareMap.colorSensor.get("high_color");
         highColorSensor.setI2cAddress(I2cAddr.create8bit(0x74));
+        sensorGyro = hardwareMap.gyroSensor.get("gyro");
+        mrGyro = (ModernRoboticsI2cGyro) sensorGyro; //allows us to get .getIntegratedZValue()
 
         //turns off color sensors' LEDs
         turnOffLEDs();
 
         //sets start position of servos
         beaconPoker.setPower(CRServoStop);
+
+        // start calibrating the gyro.
+        telemetry.addData(">", "Gyro Calibrating. Do Not move!");
+        telemetry.update();
+        mrGyro.calibrate();
+        sleep(50);
+        // DO NOT MOVE SENSOR WHILE BLUE LIGHT IS SOLID
+
+        while (mrGyro.isCalibrating()){
+            //Ensure calibration is complete (usually 2 seconds)
+        }
+
+        telemetry.addData(">", "Gyro Calibrated.  Press Start.");
+        telemetry.update();
 
         //wait for the game to start(press the play button)
         waitForStart();
@@ -70,12 +88,12 @@ public class TestEncoderAuto2 extends LinearOpMode {
          */
 
         //speed %, distance in cm, then sleep time after movement stops
-        driveForwardDistance(0.6, 50, shortSleep);
-        turnLeftDistance(0.2, 12, shortSleep);
-        driveForwardDistance(0.6, 80, shortSleep);
-        turnRightDistance(0.2, 6, shortSleep);
-        driveForwardDistance(0.3, 45, shortSleep);
-        turnRightDistance(0.2, 8, shortSleep);
+        driveForwardDistance(0.5, 50, shortSleep);
+        turnLeftDistance(0.15, 14, shortSleep);
+        checkGyro(60);
+        driveForwardDistance(0.5, 110, shortSleep);
+        turnRightDistance(0.2, 13, shortSleep);
+        checkGyro(0);
         findWhite();
         driveForwardDistance(0.15, -12, shortSleep);
         findHighColor();
@@ -483,10 +501,41 @@ public class TestEncoderAuto2 extends LinearOpMode {
     public void pokeBeacon(){
         //Moves CRServo to hit beacon and move back
         beaconPoker.setPower(CRServoForward);
-        sleep(2000);
+        sleep(2500);
         beaconPoker.setPower(CRServoBackward);
-        sleep(1000);
+        sleep(2000);
         beaconPoker.setPower(CRServoStop);
         sleep(50);
+    }
+    public void checkGyro(int target) throws InterruptedException {
+        //turnAbsoluteGyro turns robot from initial calibration, you have to know how much to turn according from your starting point
+
+        telemetry.addData(">", "Turning robot using gyro");
+        telemetry.update();
+
+        while(Math.abs(mrGyro.getIntegratedZValue() - target) > 3) {
+            if (mrGyro.getIntegratedZValue() > target) { //if gyro is positive,  the robot will turn right
+                telemetry.addData(">", "Robot is currently turning right");
+                telemetry.addData("IntegratedZValue", mrGyro.getIntegratedZValue());
+                telemetry.update();
+
+                //motorLeft.setPower(0.12);
+                //motorRight.setPower(-0.12);
+                turnRightDistance(0.1, 1, 200);
+                idle();
+            }
+
+            if (mrGyro.getIntegratedZValue() < target) { //if gyro is negative, the robot will turn left
+                telemetry.addData(">", "Robot is currently turning left");
+                telemetry.addData("IntegratedZValue", mrGyro.getIntegratedZValue());
+                telemetry.update();
+
+                //motorLeft.setPower(-0.12);
+                //motorRight.setPower(0.12);
+                turnLeftDistance(0.1, 1, 200);
+                idle();
+            }
+        }
+        stopDriving();
     }
 }
