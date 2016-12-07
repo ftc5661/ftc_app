@@ -23,11 +23,11 @@ public class Drive5661 extends OpMode {
     DcMotor motorCapBallLeft;
     DcMotor motorCapBallRight;
     DcMotor motorShootBall;
-    Servo servoGateLeft;
-    Servo servoGateRight;
+    CRServo servoGateLeft;
+    CRServo servoGateRight;
     CRServo beaconPoker;
-    double servoGatePositionLeft;
-    double servoGatePositionRight;
+    double servoGatePowerLeft;
+    double servoGatePowerRight;
     int servoPokerPower;
 
     @Override
@@ -39,16 +39,16 @@ public class Drive5661 extends OpMode {
         motorCapBallLeft = hardwareMap.dcMotor.get("cap_ball_left");
         motorCapBallRight = hardwareMap.dcMotor.get("cap_ball_right");
         motorShootBall = hardwareMap.dcMotor.get("shoot_ball");
-        servoGateLeft = hardwareMap.servo.get("left_servo");
-        servoGateRight = hardwareMap.servo.get("right_servo");
+        servoGateLeft = hardwareMap.crservo.get("left_servo");
+        servoGateRight = hardwareMap.crservo.get("right_servo");
         beaconPoker = hardwareMap.crservo.get("beacon_poker");
         //reverse right motor to drive
         motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
         //reverse right cap ball motor
         motorCapBallRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        servoGatePositionLeft = 1;
-        servoGatePositionRight = 0;
+        servoGatePowerLeft = 0;
+        servoGatePowerRight = 0;
         servoPokerPower = 0;
 
     }
@@ -99,16 +99,16 @@ public class Drive5661 extends OpMode {
 
         //if the a button is pressed, servos close
         if (gamepad2.a){
-            servoGatePositionLeft = 0;
-            servoGatePositionRight = 1;
+            servoGatePowerLeft = -1;
+            servoGatePowerRight = 1;
         }
         if (!gamepad2.a){
-            servoGatePositionLeft = 1;
-            servoGatePositionRight = 0;
+            servoGatePowerLeft = 1;
+            servoGatePowerRight = -1;
         }
         //sets servo position to servoPosition var
-        servoGateLeft.setPosition(servoGatePositionLeft);
-        servoGateRight.setPosition(servoGatePositionRight);
+        servoGateLeft.setPower(servoGatePowerLeft);
+        servoGateRight.setPower(servoGatePowerRight);
 
         //if right bumper is pressed, motor collects ball into robot
         if (gamepad2.right_bumper){
@@ -154,8 +154,8 @@ public class Drive5661 extends OpMode {
         telemetry.addData("Cap Ball Right Motor Speed", motorCapBallRight.getPower());
         telemetry.addLine();
         telemetry.addData("Controller", "Two");
-        telemetry.addData("Left Servo Position", servoGatePositionLeft);
-        telemetry.addData("Right Servo Position", servoGatePositionRight);
+        telemetry.addData("Left Servo Position", servoGatePowerLeft);
+        telemetry.addData("Right Servo Position", servoGatePowerRight);
         telemetry.addData("Collect Ball Motor Speed", motorBallCollect.getPower());
         telemetry.addData("Shoot Ball Motor Speed", motorShootBall.getPower());
         telemetry.addData("Beacon Poker Status", servoPokerPower);

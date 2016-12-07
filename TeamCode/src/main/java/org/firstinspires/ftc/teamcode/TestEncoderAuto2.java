@@ -90,11 +90,11 @@ public class TestEncoderAuto2 extends LinearOpMode {
         //speed %, distance in cm, then sleep time after movement stops
         driveForwardDistance(0.6, 50, shortSleep);
         turnLeftDistance(slowSpeed, 13, shortSleep);
-        checkGyro(39);
-        driveForwardDistance(0.6, 95, shortSleep);
+        checkGyro(35);
+        driveForwardDistance(0.6, 115, shortSleep);
         turnRightDistance(slowSpeed, 13, shortSleep);
         checkGyro(0);
-        driveForwardDistance(0.3, 30, shortSleep);
+        driveForwardDistance(0.3, 40, shortSleep);
         findWhite();
         driveForwardDistance(0.15, -12, shortSleep);
         findHighColor();
