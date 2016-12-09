@@ -70,7 +70,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
         telemetry.addData(">", "Gyro Calibrating. Do Not move!");
         telemetry.update();
         mrGyro.calibrate();
-        sleep(50);
+        sleep(100);
         // DO NOT MOVE SENSOR WHILE BLUE LIGHT IS SOLID
 
         while (mrGyro.isCalibrating()){
@@ -90,15 +90,16 @@ public class TestEncoderAuto2 extends LinearOpMode {
         //speed %, distance in cm, then sleep time after movement stops
         driveForwardDistance(0.6, 50, shortSleep);
         turnLeftDistance(slowSpeed, 13, shortSleep);
-        checkGyro(35);
-        driveForwardDistance(0.6, 115, shortSleep);
-        turnRightDistance(slowSpeed, 13, shortSleep);
-        checkGyro(0);
-        driveForwardDistance(0.3, 40, shortSleep);
+        checkGyro(50);
+        driveForwardDistance(0.6, 96
+                , shortSleep);
+        turnRightDistance(slowSpeed, 14, shortSleep);
+        checkGyro(-2);
+        driveForwardDistance(0.25, 40, shortSleep);
         findWhite();
         driveForwardDistance(0.15, -12, shortSleep);
         findHighColor();
-        driveForwardDistance(0.3, -40, shortSleep);
+        driveForwardDistance(0.25, -40, shortSleep);
         findWhiteBackwards();
         driveForwardDistance(0.15, -6, shortSleep);
         findHighColorBackwards();

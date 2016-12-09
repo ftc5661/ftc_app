@@ -71,7 +71,7 @@ public class TestEncoderAuto extends LinearOpMode{
         telemetry.addData(">", "Gyro Calibrating. Do Not move!");
         telemetry.update();
         mrGyro.calibrate();
-        sleep(50);
+        sleep(100);
         // DO NOT MOVE SENSOR WHILE BLUE LIGHT IS SOLID
 
         while (mrGyro.isCalibrating()){
