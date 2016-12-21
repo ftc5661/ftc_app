@@ -26,8 +26,8 @@ public class Drive5661 extends OpMode {
     CRServo servoGateLeft;
     CRServo servoGateRight;
     CRServo beaconPoker;
-    double servoGatePowerLeft;
-    double servoGatePowerRight;
+    int servoGatePowerLeft;
+    int servoGatePowerRight;
     int servoPokerPower;
 
     @Override
@@ -102,9 +102,13 @@ public class Drive5661 extends OpMode {
             servoGatePowerLeft = -1;
             servoGatePowerRight = 1;
         }
-        if (!gamepad2.a){
+        if (gamepad2.b){
             servoGatePowerLeft = 1;
             servoGatePowerRight = -1;
+        }
+        if (!gamepad2.a && !gamepad2.b){
+            servoGatePowerLeft = 0;
+            servoGatePowerRight = 0;
         }
         //sets servo position to servoPosition var
         servoGateLeft.setPower(servoGatePowerLeft);

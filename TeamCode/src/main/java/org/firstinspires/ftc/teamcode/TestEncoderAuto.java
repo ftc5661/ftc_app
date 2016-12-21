@@ -78,6 +78,7 @@ public class TestEncoderAuto extends LinearOpMode{
             //Ensure calibration is complete (usually 2 seconds)
         }
 
+        sleep(100);
         telemetry.addData(">", "Gyro Calibrated.  Press Start.");
         telemetry.update();
 
@@ -95,7 +96,7 @@ public class TestEncoderAuto extends LinearOpMode{
         driveForwardDistance(0.6, 95, shortSleep);
         turnLeftDistance(slowSpeed, 16, shortSleep);
         checkGyro(-1);
-        driveForwardDistance(0.3, 50, shortSleep);
+        driveForwardDistance(0.3, 50,      shortSleep);
         findWhite();
         driveForwardDistance(0.15, 6, shortSleep);
         findHighColor();
@@ -103,6 +104,7 @@ public class TestEncoderAuto extends LinearOpMode{
         findWhiteBackwards();
         driveForwardDistance(0.15, 12, shortSleep);
         findHighColorBackwards();
+        driveForwardDistance(0.5, -150, shortSleep);
         stopDriving();
 
         /*
@@ -132,7 +134,7 @@ public class TestEncoderAuto extends LinearOpMode{
 
         driveForward(power);
 
-        while(!isStopRequested() && motorLeft.isBusy() && motorRight.isBusy()){
+        while(motorLeft.isBusy() && motorRight.isBusy()){
             //wait until target position is reached
         }
 
@@ -158,7 +160,7 @@ public class TestEncoderAuto extends LinearOpMode{
 
         driveForward(power);
 
-        while(!isStopRequested() && motorLeft.isBusy() && motorRight.isBusy()){
+        while(motorLeft.isBusy() && motorRight.isBusy()){
             //wait until target position is reached
         }
 
@@ -184,7 +186,7 @@ public class TestEncoderAuto extends LinearOpMode{
 
         driveForward(power);
 
-        while(!isStopRequested() && motorLeft.isBusy() && motorRight.isBusy()){
+        while(motorLeft.isBusy() && motorRight.isBusy()){
             //wait until target position is reached
         }
 
@@ -331,6 +333,8 @@ public class TestEncoderAuto extends LinearOpMode{
 
         modeRunWithoutEncoders();
 
+        /*
+
         while(!isStopRequested() && highColorSensor.red() == 0 && highColorSensor.blue() == 0){
             //while highColorSensor cannot read any color values, it moves the robot back
 
@@ -366,6 +370,7 @@ public class TestEncoderAuto extends LinearOpMode{
             driveForward(-slowSpeed);
             idle();
         }
+        */
 
         stopDriving();
 
@@ -525,7 +530,7 @@ public class TestEncoderAuto extends LinearOpMode{
 
                 //motorLeft.setPower(0.12);
                 //motorRight.setPower(-0.12);
-                turnRightDistance(0.1, 1, shortSleep);
+                turnRightDistance(0.13, 1, shortSleep);
                 idle();
             }
 
@@ -536,7 +541,7 @@ public class TestEncoderAuto extends LinearOpMode{
 
                 //motorLeft.setPower(-0.12);
                 //motorRight.setPower(0.12);
-                turnLeftDistance(0.1, 1, shortSleep);
+                turnLeftDistance(0.13  , 1, shortSleep);
                 idle();
             }
         }

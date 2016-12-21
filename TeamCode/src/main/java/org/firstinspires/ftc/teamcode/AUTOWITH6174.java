@@ -16,8 +16,8 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
  * Full Autonomous program for the 5661 programming robot on the red side
  *
  */
-@Autonomous(name = "Autonomous Red Side", group = "Autonomous OpMode")
-public class TestEncoderAuto2 extends LinearOpMode {
+@Autonomous(name = "(with 6174) Autonomous Red Side", group = "Autonomous OpMode")
+public class AUTOWITH6174 extends LinearOpMode {
     //declares motors, servos, and other electronics
     DcMotor motorRight;
     DcMotor motorLeft;
@@ -90,20 +90,22 @@ public class TestEncoderAuto2 extends LinearOpMode {
 
         //speed %, distance in cm, then sleep time after movement stops
         driveForwardDistance(0.6, 50, shortSleep);
-        turnLeftDistance(slowSpeed, 11, shortSleep);
-        checkGyro(43);
-        driveForwardDistance(0.6, 100 , shortSleep);
-        turnRightDistance(slowSpeed, 11, shortSleep);
+        turnLeftDistance(slowSpeed, 13, shortSleep);
+        checkGyro(50);
+        driveForwardDistance(0.6, 96, shortSleep);
+        turnRightDistance(slowSpeed, 14, shortSleep);
         checkGyro(-2);
         driveForwardDistance(0.25, 40, shortSleep);
+        checkGyro(0);
         findWhite();
         driveForwardDistance(0.15, -12, shortSleep);
         findHighColor();
-        driveForwardDistance(0.25, -60, shortSleep);
-        findWhiteBackwards();
-        driveForwardDistance(0.15, -6, shortSleep);
-        findHighColorBackwards();
-        driveForwardDistance(0.5, -150, shortSleep);
+        driveForwardDistance(0.5, 20, shortSleep);
+        //driveForwardDistance(0.25, -60, shortSleep);
+        //findWhiteBackwards();
+        //driveForwardDistance(0.15, -6, shortSleep);
+        //findHighColorBackwards();
+        //driveForwardDistance(0.5, -30, shortSleep);
         stopDriving();
 
         /*
@@ -132,7 +134,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
 
         driveForward(power);
 
-        while(motorLeft.isBusy() && motorRight.isBusy()){
+        while(!isStopRequested() && motorLeft.isBusy() && motorRight.isBusy()){
             //wait until target position is reached
         }
 
@@ -158,7 +160,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
 
         driveForward(power);
 
-        while(motorLeft.isBusy() && motorRight.isBusy()){
+        while(!isStopRequested() && motorLeft.isBusy() && motorRight.isBusy()){
             //wait until target position is reached
         }
 
@@ -184,7 +186,7 @@ public class TestEncoderAuto2 extends LinearOpMode {
 
         driveForward(power);
 
-        while(motorLeft.isBusy() && motorRight.isBusy()){
+        while(!isStopRequested() && motorLeft.isBusy() && motorRight.isBusy()){
             //wait until target position is reached
         }
 
@@ -332,7 +334,6 @@ public class TestEncoderAuto2 extends LinearOpMode {
         modeRunWithoutEncoders();
 
         /*
-
         while(!isStopRequested() && highColorSensor.red() == 0 && highColorSensor.blue() == 0){
             //while highColorSensor cannot read any color values, it moves the robot back
 
@@ -368,7 +369,6 @@ public class TestEncoderAuto2 extends LinearOpMode {
             driveForward(slowSpeed);
             idle();
         }
-
         */
 
         stopDriving();
@@ -419,8 +419,8 @@ public class TestEncoderAuto2 extends LinearOpMode {
     public void findHighColorBackwards() throws InterruptedException {
 
         modeRunWithoutEncoders();
-
         /*
+
         while(!isStopRequested() && highColorSensor.red() == 0 && highColorSensor.blue() == 0){
             //while highColorSensor cannot read any color values, it moves the robot back
 
@@ -459,7 +459,6 @@ public class TestEncoderAuto2 extends LinearOpMode {
         */
 
         stopDriving();
-
 
         if (highColorSensor.red() > highColorSensor.blue()){
             //Right side of beacon is red
