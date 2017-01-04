@@ -1,10 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -23,8 +28,13 @@ public class Drive5661 extends OpMode {
     DcMotor motorCapBallLeft;
     DcMotor motorCapBallRight;
     DcMotor motorShootBall;
-    CRServo servoGateLeft;
-    CRServo servoGateRight;
+    ColorSensor colorSensor;
+    ColorSensor highColorSensor;
+    DeviceInterfaceModule CDI;
+    GyroSensor sensorGyro;
+    ModernRoboticsI2cGyro mrGyro;
+    //CRServo servoGateLeft;
+    //CRServo servoGateRight;
     CRServo beaconPoker;
     int servoGatePowerLeft;
     int servoGatePowerRight;
@@ -39,13 +49,24 @@ public class Drive5661 extends OpMode {
         motorCapBallLeft = hardwareMap.dcMotor.get("cap_ball_left");
         motorCapBallRight = hardwareMap.dcMotor.get("cap_ball_right");
         motorShootBall = hardwareMap.dcMotor.get("shoot_ball");
-        servoGateLeft = hardwareMap.crservo.get("left_servo");
-        servoGateRight = hardwareMap.crservo.get("right_servo");
+        //servoGateLeft = hardwareMap.crservo.get("left_servo");
+        //servoGateRight = hardwareMap.crservo.get("right_servo");
         beaconPoker = hardwareMap.crservo.get("beacon_poker");
         //reverse right motor to drive
         motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
         //reverse right cap ball motor
         motorCapBallRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        CDI = hardwareMap.deviceInterfaceModule.get("Device Interface Module 1");
+        //set correct color sensor I2cAddress names
+        colorSensor = hardwareMap.colorSensor.get("color");
+        colorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
+        highColorSensor = hardwareMap.colorSensor.get("high_color");
+        highColorSensor.setI2cAddress(I2cAddr.create8bit(0x74));
+        sensorGyro = hardwareMap.gyroSensor.get("gyro");
+        mrGyro = (ModernRoboticsI2cGyro) sensorGyro; //allows us to get .getIntegratedZValue()
+
+        //turns off color sensors' LEDs
+        turnOffLEDs();
 
         servoGatePowerLeft = 0;
         servoGatePowerRight = 0;
@@ -111,8 +132,8 @@ public class Drive5661 extends OpMode {
             servoGatePowerRight = 0;
         }
         //sets servo position to servoPosition var
-        servoGateLeft.setPower(servoGatePowerLeft);
-        servoGateRight.setPower(servoGatePowerRight);
+        //servoGateLeft.setPower(servoGatePowerLeft);
+        //servoGateRight.setPower(servoGatePowerRight);
 
         //if right bumper is pressed, motor collects ball into robot
         if (gamepad2.right_bumper){
@@ -163,6 +184,15 @@ public class Drive5661 extends OpMode {
         telemetry.addData("Collect Ball Motor Speed", motorBallCollect.getPower());
         telemetry.addData("Shoot Ball Motor Speed", motorShootBall.getPower());
         telemetry.addData("Beacon Poker Status", servoPokerPower);
+        telemetry.addData("Color Sensor", colorSensor.alpha());
+        telemetry.addData("High Color Sensor Red", highColorSensor.red());
+        telemetry.addData("High Color Sensor Blue", highColorSensor.blue());
+        telemetry.addData("Gyro", mrGyro.getIntegratedZValue());
         telemetry.update();
+    }
+    public void turnOffLEDs(){
+        //turns off color sensor LEDs
+        colorSensor.enableLed(false);
+        highColorSensor.enableLed(false);
     }
 }

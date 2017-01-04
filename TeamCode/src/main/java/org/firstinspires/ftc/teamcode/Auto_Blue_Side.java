@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -10,20 +9,21 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
-import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by 5661 on 9/21/2016.
+ * Created by 5661 on 12/21/2016.
  *
  * Full Autonomous program for the 5661 programming robot on the blue side
  *
  */
 @Autonomous(name = "Autonomous Blue Side", group = "Autonomous OpMode")
-@Disabled
-public class TestEncoderAuto extends LinearOpMode{
+public class Auto_Blue_Side extends LinearOpMode {
+
     //declares motors, servos, and other electronics
     DcMotor motorRight;
     DcMotor motorLeft;
+    DcMotor motorBallCollect;
+    DcMotor motorShootBall;
     CRServo beaconPoker;
     ColorSensor colorSensor;
     ColorSensor highColorSensor;
@@ -48,11 +48,14 @@ public class TestEncoderAuto extends LinearOpMode{
 
     @Override
     public void runOpMode() throws InterruptedException {
+
         //connects motors, servos, and other electronics code names to config file names
         motorRight = hardwareMap.dcMotor.get("right_motor");
         motorLeft = hardwareMap.dcMotor.get("left_motor");
+        motorBallCollect = hardwareMap.dcMotor.get("collect_motor");
+        motorShootBall = hardwareMap.dcMotor.get("shoot_ball");
         //reverse right motor to drive correctly
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorRight.setDirection(DcMotor.Direction.REVERSE);
         beaconPoker = hardwareMap.crservo.get("beacon_poker");
         CDI = hardwareMap.deviceInterfaceModule.get("Device Interface Module 1");
         //set correct color sensor I2cAddress names
@@ -91,25 +94,12 @@ public class TestEncoderAuto extends LinearOpMode{
          *          AUTONOMOUS MOVEMENTS BEGIN HERE
          */
 
-        //speed %, distance in cm, then sleep time after movement stops
-        driveForwardDistance(0.6, 50, shortSleep);
-        turnRightDistance(slowSpeed, 17, shortSleep);
-        checkGyro(-60);
-        driveForwardDistance(0.6, 95, shortSleep);
-        turnLeftDistance(slowSpeed, 16, shortSleep);
-        checkGyro(-1);
-        driveForwardDistance(0.3, 50,      shortSleep);
-        findWhite();
-        driveForwardDistance(0.15, 6, shortSleep);
-        findHighColor();
-        driveForwardDistance(0.3, -60, shortSleep);
-        findWhiteBackwards();
-        driveForwardDistance(0.15, 12, shortSleep);
-        findHighColorBackwards();
-        driveForwardDistance(0.5, -150, shortSleep);
-        stopDriving();
+        driveForwardDistance(0.2, 65, 100);
+        turnLeftDistance(0.15, 30, 100);
+        checkGyro(90);
+        driveForwardDistance(0.2, 25, 100);
 
-        /*
+         /*
          *          AUTONOMOUS MOVEMENTS END HERE
          */
 
@@ -117,8 +107,7 @@ public class TestEncoderAuto extends LinearOpMode{
         //update telemetry logs
         telemetry.addData(">", "Path Complete");
         telemetry.update();
-        }
-
+    }
     public void driveForwardDistance(double power, int distance, int sleepTime) throws InterruptedException {
         //DriveForwardDistance is used to move the robot forward a specific distance
 
@@ -153,16 +142,17 @@ public class TestEncoderAuto extends LinearOpMode{
         //distance in cm divided by the wheel circumference times motor encoder ticks
         double distanceSet = ((distance/(wheelCircumference))* encoderTicks);
         //set target position
-        motorLeft.setTargetPosition ((int)distanceSet);
-        motorRight.setTargetPosition ((int)-distanceSet);
+        //motorLeft.setTargetPosition ((int)-distanceSet);
+        motorRight.setTargetPosition ((int)distanceSet);
 
         sleep(50);
 
         modeRunToPosition();
 
-        driveForward(power);
+        //driveForward(power);
+        motorRight.setPower(power);
 
-        while(motorLeft.isBusy() && motorRight.isBusy()){
+        while(motorRight.isBusy()){
             //wait until target position is reached
         }
 
@@ -179,16 +169,17 @@ public class TestEncoderAuto extends LinearOpMode{
         //distance in cm divided by the wheel circumference times motor encoder ticks
         double distanceSet = ((distance/(wheelCircumference))* encoderTicks);
         //set target position
-        motorLeft.setTargetPosition ((int)-distanceSet);
-        motorRight.setTargetPosition ((int)distanceSet);
+        motorLeft.setTargetPosition ((int)distanceSet);
+        //motorRight.setTargetPosition ((int)-distanceSet);
 
         sleep(50);
 
         modeRunToPosition();
 
-        driveForward(power);
+        //driveForward(power);
+        motorLeft.setPower(power);
 
-        while(motorLeft.isBusy() && motorRight.isBusy()){
+        while(motorLeft.isBusy()){
             //wait until target position is reached
         }
 
@@ -548,5 +539,11 @@ public class TestEncoderAuto extends LinearOpMode{
             }
         }
         stopDriving();
+    }
+    public void shootBall(int time) throws InterruptedException{
+
+    }
+    public void collectBall(int time) throws InterruptedException{
+
     }
 }
